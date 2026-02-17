@@ -1,3 +1,12 @@
+// user role
+export type USER_ROLE_TYPE =
+  | "super_admin"
+  | "gym_admin"
+  | "manager"
+  | "trainer"
+  | "gym_staff"
+  | "user";
+
 export type LEAVE_TYPE = "sick" | "vacation" | "other";
 
 export type LEAVE_STATUS = "pending" | "approved" | "rejected";
