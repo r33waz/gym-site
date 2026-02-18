@@ -18,6 +18,9 @@ export class ILoginDto {
   email: string;
 
   @IsString()
+  username: string;
+
+  @IsString()
   password: string;
 }
 
@@ -45,4 +48,3 @@ export class IChangePasswordDto {
   @IsString()
   confirmNewPassword: string;
 }
-

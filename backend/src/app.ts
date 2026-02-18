@@ -1,4 +1,3 @@
-import cors from "cors";
 import "dotenv/config";
 import express from "express";
 import mainRoute from "./modules/index.route";
@@ -6,7 +5,7 @@ import mainRoute from "./modules/index.route";
 
 const app = express();
 
-app.use(cors());
+// app.use(cors());
 
 // Parse JSON bodies (from POST/PUT requests)
 app.use(express.json());

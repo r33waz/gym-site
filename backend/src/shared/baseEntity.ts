@@ -1,13 +1,13 @@
-import { Column, Entity, PrimaryGeneratedColumn, Timestamp } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  @Column("created_at")
-  created_at?: Timestamp;
+  @Column({ type: "timestamp with time zone" })
+  created_At?: Date;
 
-  @Column("updated_at")
-  updated_at?: Timestamp;
+  @Column({ type: "timestamp with time zone" })
+  updated_At?: Date;
 }
