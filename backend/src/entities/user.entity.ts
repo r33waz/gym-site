@@ -1,8 +1,17 @@
-import { Column, OneToOne } from "typeorm";
+import { Column, Entity, Index, OneToOne } from "typeorm";
+import { USER_ROLE } from "../constant/enum";
 import { BaseEntity } from "../shared/baseEntity";
 import { Auth } from "./auth.entity";
 
+@Entity()
+@Index("IDX_USER_USERNAME", ["username"])
+@Index("IDX_USER_ROLE", ["role"])
+@Index("IDX_USER_CONTACT", ["contact_number"])
+@Index("IDX_USER_CITY", ["city"])
 export class User extends BaseEntity {
+  @Column()
+  username: string;
+
   @Column()
   first_name: string;
 
@@ -14,6 +23,9 @@ export class User extends BaseEntity {
 
   @Column()
   gender: string;
+
+  @Column({ type: "enum", enum: USER_ROLE, default: USER_ROLE.USER })
+  role: string;
 
   @Column()
   contact_number: string;
@@ -33,6 +45,6 @@ export class User extends BaseEntity {
   @Column()
   profile_picture: string;
 
-  @OneToOne(() => Auth, (auth) => auth.user)
+  @OneToOne(() => Auth, (auth) => auth.user, { onDelete: "CASCADE" })
   auth: Auth;
 }
