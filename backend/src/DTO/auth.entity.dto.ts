@@ -12,13 +12,32 @@ export class AuthEntityDto {
   is_email_verified: boolean;
 }
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     LoginDTO:
+ *       type: object
+ *       required:
+ *         - password
+ *       properties:
+ *         email:
+ *           type: string
+ *           example: admin@gym.com
+ *         username:
+ *           type: string
+ *           example: admin123
+ *         password:
+ *           type: string
+ *           example: password123
+ */
 export class ILoginDto {
   @IsEmail()
   @IsString()
-  email: string;
+  email?: string;
 
   @IsString()
-  username: string;
+  username?: string;
 
   @IsString()
   password: string;
