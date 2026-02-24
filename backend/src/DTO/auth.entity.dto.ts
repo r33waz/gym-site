@@ -43,13 +43,58 @@ export class ILoginDto {
   password: string;
 }
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     IForgetPasswordDto:
+ *       type: object
+ *       required:
+ *         - email
+ *       properties:
+ *         email:
+ *           type: string
+ *           example: admin@gym.com
+ */
+
 export class IForgetPasswordDto {
   @IsEmail()
   @IsString()
   email: string;
 }
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     IResetPasswordDto:
+ *       type: object
+ *       required:
+ *         - email
+ *         - otp
+ *         - password
+ *         - confirmPassword
+ *       properties:
+ *         email:
+ *           type: string
+ *           example: admin@gym.com
+ *         otp:
+ *           type: string
+ *           example: 123456
+ *         password:
+ *           type: string
+ *           example: newpassword123
+ *         confirmPassword:
+ *           type: string
+ *           example: newpassword123
+ */
 export class IResetPasswordDto {
+  @IsEmail()
+  email: string;
+
+  @IsString()
+  otp: string;
+
   @IsString()
   password: string;
 
@@ -57,6 +102,28 @@ export class IResetPasswordDto {
   confirmPassword: string;
 }
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     IChangePasswordDto:
+ *       type: object
+ *       required:
+ *         - oldPassword
+ *         - password
+ *         - confirmPassword
+ *       properties:
+ *         oldPassword:
+ *           type: string
+ *           example: oldpassword123
+ *         password:
+ *           type: string
+ *           example: newpassword123
+ *         confirmPassword:
+ *           type: string
+ *           example: newpassword123
+
+ */
 export class IChangePasswordDto {
   @IsString()
   oldPassword: string;
