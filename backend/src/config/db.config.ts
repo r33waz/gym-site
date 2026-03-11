@@ -1,15 +1,15 @@
-import dotenv from "dotenv";
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 
-dotenv.config(); // Load .env variables
+import "dotenv/config";
+
 
 const isProduction = process.env.NODE_ENV === "production";
-
+console.log("databasename",process.env.DB_NAME)
 const AppDataSource = new DataSource({
   type: "postgres",
   host: process.env.DB_HOST,
-  port: parseInt(process.env.DB_PORT || "5432"),
+  port: Number(process.env.DB_PORT),
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,

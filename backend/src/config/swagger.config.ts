@@ -6,7 +6,7 @@ const options: swaggerJsdoc.Options = {
     info: {
       title: "Gym Management API",
       version: "1.0.0",
-      description: "API Documentation",
+      description: " API Documentation",
     },
 
     servers: [
@@ -17,7 +17,7 @@ const options: swaggerJsdoc.Options = {
 
     tags: [
       { name: "Auth", description: "Authentication APIs" },
-      { name: "Users", description: "System Users Management" },
+      { name: "User", description: "System Users Management" },
       { name: "Members", description: "Gym Members" },
       { name: "Trainers", description: "Trainer Management" },
       { name: "Attendance", description: "Attendance Tracking" },

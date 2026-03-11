@@ -135,14 +135,82 @@ export class CreateUserDTO {
   gymId: string;
 }
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     UpdateUserDTO:
+ *       type: object
+ *       properties:
+ *         role:
+ *           type: string
+ *           example: "admin"
+ *         firstName:
+ *           type: string
+ *           example: "John"
+ *         middleName:
+ *           type: string
+ *           example: "Doe"
+ *         lastName:
+ *           type: string
+ *           example: "Doe"
+ *         phone:
+ *           type: string
+ *           example: "1234567890"
+ *         address:
+ *           type: string
+ *           example: "123 Main St"
+ *         profilePicture:
+ *           type: string
+ *           example: "https://example.com/profile.jpg"
+ *         gender:
+ *           type: string
+ *           example: "male"
+ *         dateOfBirth:
+ *           type: string
+ *           example: "1990-01-01"
+ *         bloodGroup:
+ *           type: string
+ *           example: "A+"
+ *         height:
+ *           type: number
+ *           example: 180
+ *         weight:
+ *           type: number
+ *           example: 75
+ *         emergencyContactName:
+ *           type: string
+ *           example: "Jane Doe"
+ *         emergencyContactRelationship:
+ *           type: string
+ *           example: "Mother"
+ *         emergencyContactPhone:
+ *           type: string
+ *           example: "0987654321"
+ */
+
 export class UpdateUserDTO {
   @IsOptional()
+  @IsString()
+  email?: string;
+
+  @IsOptional()
+  @IsString()
+  password?: string;
+
+  @IsOptional()
+  @IsString()
   role?: USER_ROLE_TYPE;
 
   @IsOptional()
   @IsString()
   @Length(2, 50)
   firstName?: string;
+
+  @IsOptional()
+  @IsString()
+  @Length(2, 50)
+  middleName?: string;
 
   @IsOptional()
   @IsString()
@@ -160,4 +228,41 @@ export class UpdateUserDTO {
   @IsOptional()
   @IsString()
   profilePicture?: string;
+
+  @IsOptional()
+  @IsString()
+  gender?: string;
+
+  @IsOptional()
+  @IsString()
+  dateOfBirth?: string;
+
+  @IsOptional()
+  @IsString()
+  bloodGroup?: string;
+
+  @IsOptional()
+  @IsNumber()
+  height?: number;
+
+  @IsOptional()
+  @IsNumber()
+  weight?: number;
+
+  @IsOptional()
+  @IsString()
+  emergencyContactName?: string;
+
+  @IsOptional()
+  @IsString()
+  emergencyContactRelationship?: string;
+
+  @IsOptional()
+  @IsString()
+  emergencyContactPhone?: string;
+}
+
+export class DeleteUserDTO {
+  @IsString()
+  userId: string;
 }
