@@ -1,7 +1,8 @@
-import { Column, Entity, Index, OneToOne } from "typeorm";
+import { Column, Entity, Index, ManyToOne, OneToMany, OneToOne } from "typeorm";
 import { USER_ROLE } from "../constant/enum";
 import { BaseEntity } from "../shared/baseEntity";
 import { Auth } from "./auth.entity";
+import { Gym } from "./gym.entity";
 
 @Entity()
 @Index("IDX_USER_USERNAME", ["username"])
@@ -47,4 +48,12 @@ export class User extends BaseEntity {
 
   @OneToOne(() => Auth, (auth) => auth.user, { onDelete: "CASCADE" })
   auth: Auth;
+
+  // User belongs to a Gym
+  @ManyToOne(() => Gym, (gym) => gym.users, { onDelete: "SET NULL" })
+  gym: Gym;
+
+  // Gyms that this user owns
+  @OneToMany(() => Gym, (gym) => gym.owner)
+  ownedGyms: Gym[];
 }

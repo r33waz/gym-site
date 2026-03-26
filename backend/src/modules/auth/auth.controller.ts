@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { ILoginDto } from "../../DTO/auth.entity.dto";
+import { IForgetPasswordDto, ILoginDto } from "../../DTO/auth.entity.dto";
 import AppDataSource from "../../config/db.config";
 import { HTTP_CODE } from "../../constant/enum";
 import { successMessage } from "../../constant/response.message";
@@ -16,11 +16,7 @@ const userService = new UserService(authRepo);
 class AuthController {
   // Login endpoint
   login = TryCatch(async (req: Request, res: Response) => {
-    const dto: ILoginDto = {
-      email: req.body.email,
-      password: req.body.password,
-      username: req.body.username,
-    };
+    const dto: ILoginDto = req.body;
 
     const user = await userService.loginService(dto);
 
@@ -54,6 +50,11 @@ class AuthController {
     res.clearCookie("refreshToken");
 
     return successResponse(HTTP_CODE.SUCCESS, successMessage.logout);
+  });
+
+  // Forget password endpoint
+  forgetPassword = TryCatch(async (req: Request, res: Response) => {
+    const dto:IForgetPasswordDto = req.body;
   });
 }
 
