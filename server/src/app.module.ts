@@ -14,6 +14,7 @@ import { PaymentModule } from './core/payment/payment.module';
 import { ProductModule } from './core/product/product.module';
 import { SaleItemModule } from './core/sale-item/sale-item.module';
 import { SaleModule } from './core/sale/sale.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [UserModule, AuthModule, GymModule, EmployeesModule, PaymentModule, ProductModule, InventoryModule, SaleModule, SaleItemModule,      ConfigModule.forRoot({ isGlobal: true }), // load .env
