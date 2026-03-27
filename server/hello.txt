@@ -1,0 +1,2 @@
+to create the module with  crud , dto and entioties files with out test files
+nest g resource attendance --no-spec     

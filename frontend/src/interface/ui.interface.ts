@@ -15,3 +15,20 @@ export interface SelectProps {
     disabled?: boolean
     isRequired?: boolean
 }
+
+
+//  for the input  props
+export interface InputProps {
+    type: string;
+    placeholder?: string;
+    value?: string | number;
+    onChange?: (value: string | number) => void;
+    
+    className?: string;
+    control?: any;
+    name?: string;
+    label?: string;
+    disabled?: boolean
+    isRequired?: boolean
+    debounce?: number
+}

@@ -5,6 +5,8 @@ import useSelectOptions from "./hooks/useOptions";
 
 function App() {
   const [selected, setSelected] = useState<string | number>("");
+  const [inputValue, setInputValue] = useState<string | number>("");
+  console.log("🚀 ~ App ~ inputValue:", inputValue);
   const users = [
     { id: 1, name: "John Doe", age: 10 },
     { id: 2, name: "Jane Smith", age: 20 },
@@ -24,7 +26,7 @@ function App() {
           }}
           value={selected}
         />
-        <GenericInput />
+        <GenericInput type="text" onChange={setInputValue} />
       </div>
     </>
   );

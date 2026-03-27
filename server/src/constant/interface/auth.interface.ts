@@ -26,4 +26,3 @@ export interface changePassword {
   newPassword: string;
   confirmNewPassword: string;
 }
-

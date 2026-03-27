@@ -1,18 +1,11 @@
-import { User } from "src/core/user/entities/user.entity";
-import { BaseEntity } from "src/shared/baseEntity";
-import {
-  Entity,
-  Column,
-  OneToMany,
-  ManyToOne,
-  Index,
-} from "typeorm";
+import { User } from 'src/core/user/entities/user.entity';
+import { BaseEntity } from 'src/shared/baseEntity';
+import { Entity, Column, OneToMany, ManyToOne, Index } from 'typeorm';
 
-@Entity("gyms")
-@Index("IDX_GYM_NAME", ["name"])
-@Index("IDX_GYM_CITY", ["city"])
+@Entity('gyms')
+@Index('IDX_GYM_NAME', ['name'])
+@Index('IDX_GYM_CITY', ['city'])
 export class Gym extends BaseEntity {
-
   @Column()
   name!: string;
 
@@ -41,7 +34,7 @@ export class Gym extends BaseEntity {
   logo?: string;
 
   // multiple gym documents
-  @Column("text", { array: true, nullable: true })
+  @Column('text', { array: true, nullable: true })
   documents?: string[];
 
   // gym active status
