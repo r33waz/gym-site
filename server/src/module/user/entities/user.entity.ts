@@ -1,8 +1,8 @@
 import { USER_ROLE } from 'src/constant/enum';
-import { Attendance } from 'src/core/attendance/entities/attendance.entity';
-import { Auth } from 'src/core/auth/entities/auth.entity';
-import { Gym } from 'src/core/gym/entities/gym.entity';
-import { Leave } from 'src/core/leave/entities/leave.entity';
+import { Attendance } from 'src/module/attendance/entities/attendance.entity';
+import { Auth } from 'src/module/auth/entities/auth.entity';
+import { Gym } from 'src/module/gym/entities/gym.entity';
+import { Leave } from 'src/module/leave/entities/leave.entity';
 import { BaseEntity } from 'src/shared/baseEntity';
 import { Column, Entity, Index, ManyToOne, OneToMany, OneToOne } from 'typeorm';
 

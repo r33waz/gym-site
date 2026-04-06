@@ -1,23 +1,23 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AuthModule } from './core/auth/auth.module';
+import { AuthModule } from './module/auth/auth.module';
 
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { EmployeesModule } from './core/employees/employees.module';
-import { GymModule } from './core/gym/gym.module';
-import { InventoryModule } from './core/inventory/inventory.module';
-import { PaymentModule } from './core/payment/payment.module';
-import { ProductModule } from './core/product/product.module';
-import { SaleItemModule } from './core/sale-item/sale-item.module';
-import { SaleModule } from './core/sale/sale.module';
-import { UserModule } from './core/user/user.module';
-import { AttendanceModule } from './core/attendance/attendance.module';
-import { NotificationModule } from './core/notification/notification.module';
-import { PayRollModule } from './core/pay_roll/pay_roll.module';
-import { LeaveModule } from './core/leave/leave.module';
-import { AttendanceModule } from './core/attendance/attendance.module';
+import { EmployeesModule } from './module/employees/employees.module';
+import { GymModule } from './module/gym/gym.module';
+import { InventoryModule } from './module/inventory/inventory.module';
+import { PaymentModule } from './module/payment/payment.module';
+import { ProductModule } from './module/product/product.module';
+import { SaleItemModule } from './module/sale-item/sale-item.module';
+import { SaleModule } from './module/sale/sale.module';
+import { UserModule } from './module/user/user.module';
+import { AttendanceModule } from './module/attendance/attendance.module';
+import { NotificationModule } from './module/notification/notification.module';
+import { PayRollModule } from './module/pay_roll/pay_roll.module';
+import { LeaveModule } from './module/leave/leave.module';
+import { AttendanceModule } from './module/attendance/attendance.module';
 
 @Module({
   imports: [

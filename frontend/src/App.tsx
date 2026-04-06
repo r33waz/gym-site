@@ -2,6 +2,7 @@ import { useState } from "react";
 import GenericInput from "./components/common/GenericInput";
 import GenericSelect from "./components/common/GenericSelect";
 import useSelectOptions from "./hooks/useOptions";
+import Login from "./module/public/login";
 
 function App() {
   const [selected, setSelected] = useState<string | number>("");
@@ -16,18 +17,7 @@ function App() {
 
   return (
     <>
-      <div className="flex justify-center w-full border-cyan-400 border">
-        <GenericSelect
-          label="Select Data"
-          options={useOptions}
-          onChange={(e) => {
-            setSelected(e);
-            console.log(e);
-          }}
-          value={selected}
-        />
-        <GenericInput type="text" onChange={setInputValue} />
-      </div>
+      <Login/>
     </>
   );
 }

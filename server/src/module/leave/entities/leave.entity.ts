@@ -1,5 +1,5 @@
 import { LEAVE_STATUS } from "src/constant/enum";
-import { User } from "src/core/user/entities/user.entity";
+import { User } from "src/module/user/entities/user.entity";
 import { BaseEntity } from "src/shared/baseEntity";
 import { Column, Entity, ManyToOne } from "typeorm";
 
