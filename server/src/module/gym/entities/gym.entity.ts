@@ -1,6 +1,7 @@
-import { User } from 'src/module/user/entities/user.entity';
-import { BaseEntity } from 'src/shared/baseEntity';
+
 import { Entity, Column, OneToMany, ManyToOne, Index } from 'typeorm';
+import { User } from '../../user/entities/user.entity';
+import { BaseEntity } from '../../../shared/baseEntity';
 
 @Entity('gyms')
 @Index('IDX_GYM_NAME', ['name'])

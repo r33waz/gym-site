@@ -1,9 +1,26 @@
 import GenericInput from "@/components/common/GenericInput";
-import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import type { LoginFormData } from "./schema/login.schema";
+import { loginSchema } from "./schema/login.schema";
+import { Button } from "@/components/ui/button";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  console.log("🚀 ~ Login ~ showPassword:", showPassword);
+
+
+
+  const { control, handleSubmit } = useForm<LoginFormData>({
+    resolver: yupResolver(loginSchema),
+    mode: "onChange",
+  });
+
+    const onSubmit = (data: LoginFormData) => {
+      console.log("Login submitted:", data);
+      // TODO: Integrate with auth service
+    };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
@@ -32,7 +49,7 @@ const Login = () => {
             Enter your credentials to continue
           </p>
 
-          <form className="space-y-5">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             {/* Email */}
             <div>
               <GenericInput
@@ -41,41 +58,35 @@ const Login = () => {
                 name="email"
                 placeholder="Enter your email"
                 isRequired
-                // control={}
+                control={control}
                 className="w-full mt-1 px-4 py-2 rounded-lg bg-input-bg border border-border focus:ring-2 focus:ring-primary outline-none"
               />
             </div>
 
             {/* Password */}
-            <div>
-              <label className="text-sm font-medium text-text-secondary">
-                Password
-              </label>
-
-              <div className="relative mt-1">
-                <GenericInput
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
-                  name="password"
-                  isRequired
-                  //   control={}
-                  className="w-full px-4 py-2 rounded-lg bg-input-bg border border-border focus:ring-2 focus:ring-primary outline-none"
-                />
-
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-2 text-sm text-primary"
-                >
-                  {showPassword ? "Hide" : "Show"}
-                </button>
-              </div>
+            <div className="relative">
+              <GenericInput
+                label="Password"
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                name="password"
+                isRequired
+                control={control}
+                className="pr-12 px-4 py-2 rounded-lg  border border-border focus:ring-2 focus:ring-primary outline-none"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-7.5 h-6 w-6 flex items-center bg-none justify-center text-xs text-primary  rounded-sm cursor-pointer"
+              >
+                {showPassword ? "Hide" : "Show"}
+              </button>
             </div>
 
             {/* Options */}
             <div className="flex items-center justify-between text-sm">
               <label className="flex items-center gap-2">
-                <Input type="checkbox" className="accent-primary h-4 w-4" />
+                <input type="checkbox" className="accent-primary h-4 w-4" />
                 Remember me
               </label>
 
@@ -85,12 +96,12 @@ const Login = () => {
             </div>
 
             {/* Button */}
-            <button
+            <Button
               type="submit"
-              className="w-full py-2.5 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary-hover transition btn-glow"
+              className="w-full py-2.5 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary-hover transition btn-glow "
             >
               Sign In
-            </button>
+            </Button>
           </form>
 
           {/* Footer */}

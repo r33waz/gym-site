@@ -1,6 +1,7 @@
-import { User } from 'src/module/user/entities/user.entity';
-import { BaseEntity } from 'src/shared/baseEntity';
+
 import { Column, Entity, Index, JoinColumn, OneToOne } from 'typeorm';
+import { BaseEntity } from '../../../shared/baseEntity';
+import { User } from '../../user/entities/user.entity';
 
 @Entity()
 @Index('IDX_AUTH_EMAIL', ['email'])

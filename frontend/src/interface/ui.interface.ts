@@ -19,7 +19,7 @@ export interface SelectProps {
 
 //  for the input  props
 export interface InputProps {
-    type: string;
+    type?: string;
     placeholder?: string;
     value?: string | number;
     onChange?: (value: string | number) => void;

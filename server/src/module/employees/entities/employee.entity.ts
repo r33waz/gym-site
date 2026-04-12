@@ -1,1 +1,5 @@
-export class Employee {}
+import { Entity } from "typeorm";
+import { BaseEntity } from "../../../shared/baseEntity";
+
+@Entity()
+export class Employee extends BaseEntity{}

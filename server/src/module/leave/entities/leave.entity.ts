@@ -1,7 +1,8 @@
-import { LEAVE_STATUS } from "src/constant/enum";
-import { User } from "src/module/user/entities/user.entity";
-import { BaseEntity } from "src/shared/baseEntity";
+
 import { Column, Entity, ManyToOne } from "typeorm";
+import { BaseEntity } from "../../../shared/baseEntity";
+import { User } from "../../user/entities/user.entity";
+import { LEAVE_STATUS } from "../../../constant/enum";
 
 
 @Entity()

@@ -1,1 +1,5 @@
-export class Notification {}
+import { Entity } from "typeorm";
+import { BaseEntity } from "../../../shared/baseEntity";
+
+@Entity()
+export class Notification extends BaseEntity{}

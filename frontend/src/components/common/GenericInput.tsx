@@ -100,17 +100,17 @@ const GenericInput = (props: InputProps) => {
             {renderLabel(field.name)}
             <Input
               id={field.name}
-              type={type}
               placeholder={placeholder}
+              type={type}
               {...field}
               onChange={handleControlledChange}
               className={className}
               disabled={disabled}
-              required={isRequired}
+              required={false}
               aria-invalid={!!fieldState.error}
             />
             {fieldState.error && (
-              <p className="mt-1 text-xs text-destructive">
+              <p className="mt-1 text-sm text-destructive">
                 {fieldState.error.message}
               </p>
             )}

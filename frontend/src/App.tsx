@@ -2,7 +2,7 @@ import { useState } from "react";
 import GenericInput from "./components/common/GenericInput";
 import GenericSelect from "./components/common/GenericSelect";
 import useSelectOptions from "./hooks/useOptions";
-import Login from "./module/public/login";
+import Login from "./module/public/login/login";
 
 function App() {
   const [selected, setSelected] = useState<string | number>("");

@@ -1,10 +1,11 @@
-import { USER_ROLE } from 'src/constant/enum';
-import { Attendance } from 'src/module/attendance/entities/attendance.entity';
-import { Auth } from 'src/module/auth/entities/auth.entity';
-import { Gym } from 'src/module/gym/entities/gym.entity';
-import { Leave } from 'src/module/leave/entities/leave.entity';
-import { BaseEntity } from 'src/shared/baseEntity';
+
 import { Column, Entity, Index, ManyToOne, OneToMany, OneToOne } from 'typeorm';
+import { BaseEntity } from '../../../shared/baseEntity';
+import { USER_ROLE } from '../../../constant/enum';
+import { Auth } from '../../auth/entities/auth.entity';
+import { Gym } from '../../gym/entities/gym.entity';
+import { Attendance } from '../../attendance/entities/attendance.entity';
+import { Leave } from '../../leave/entities/leave.entity';
 
 @Entity()
 @Index('IDX_USER_USERNAME', ['username'])
