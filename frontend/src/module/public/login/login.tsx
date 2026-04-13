@@ -2,25 +2,25 @@ import GenericInput from "@/components/common/GenericInput";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import type { LoginFormData } from "./schema/login.schema";
-import { loginSchema } from "./schema/login.schema";
+import type { ILoginInterface } from "../../../service/auth/schema/login.schema";
+import { loginSchema } from "../../../service/auth/schema/login.schema";
 import { Button } from "@/components/ui/button";
+import { useLogin } from "@/service/auth/auth.query";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   console.log("🚀 ~ Login ~ showPassword:", showPassword);
 
-
-
-  const { control, handleSubmit } = useForm<LoginFormData>({
+  const { control, handleSubmit } = useForm<ILoginInterface>({
     resolver: yupResolver(loginSchema),
     mode: "onChange",
   });
 
-    const onSubmit = (data: LoginFormData) => {
-      console.log("Login submitted:", data);
-      // TODO: Integrate with auth service
-    };
+  const { mutateAsync: uselogin, isPending: submitting } = useLogin();
+
+  const onSubmit = (data: ILoginInterface) => {
+    uselogin(data);
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
@@ -49,14 +49,18 @@ const Login = () => {
             Enter your credentials to continue
           </p>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+          <form
+            noValidate
+            onSubmit={handleSubmit(onSubmit)}
+            className="space-y-5"
+          >
             {/* Email */}
             <div>
               <GenericInput
                 type="email"
-                label="Email"
+                label="Email or Username"
                 name="email"
-                placeholder="Enter your email"
+                placeholder="Enter your email or username"
                 isRequired
                 control={control}
                 className="w-full mt-1 px-4 py-2 rounded-lg bg-input-bg border border-border focus:ring-2 focus:ring-primary outline-none"
@@ -84,12 +88,7 @@ const Login = () => {
             </div>
 
             {/* Options */}
-            <div className="flex items-center justify-between text-sm">
-              <label className="flex items-center gap-2">
-                <input type="checkbox" className="accent-primary h-4 w-4" />
-                Remember me
-              </label>
-
+            <div className="flex justify-end text-sm">
               <button type="button" className="text-primary hover:underline">
                 Forgot password?
               </button>
@@ -97,6 +96,7 @@ const Login = () => {
 
             {/* Button */}
             <Button
+              disabled={submitting}
               type="submit"
               className="w-full py-2.5 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary-hover transition btn-glow "
             >

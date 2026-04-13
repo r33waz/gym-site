@@ -11,47 +11,53 @@ import { comparePassword } from '../../utils/password.utils';
 export class AuthService {
   constructor(
     private jwtService: JwtService,
-
     @InjectRepository(Auth)
     private authRepo: Repository<Auth>,
   ) {}
 
   private readonly ACCESS_EXPIRES = '15m';
   private readonly REFRESH_EXPIRES = '7d';
+
   async login(loginDto: ILoginDto) {
     const { email, password } = loginDto;
-    console.log(
-      '🚀 ~ AuthService ~ login ~ email, password, username :',
-      email,
-      password,
-    );
 
-    const query = this.authRepo
+    // 1. Fixed the 'user' reserved keyword by using 'u' alias
+    // 2. Used leftJoinAndSelect to automatically handle the mapping safely
+    const authAccount = await this.authRepo
       .createQueryBuilder('auth')
-      .leftJoin('auth.user', 'user')
-      .where('auth.email = :email OR auth.username = :email', {
-        email,
+      .leftJoinAndSelect('auth.user', 'u')
+      .where('auth.email = :identifier OR auth.username = :identifier', {
+        identifier: email,
       })
-      .addSelect(['user.role']);
+      .getOne();
 
-    const user = await query.getOne();
-
-    if (!user) {
+    if (!authAccount) {
       throw new UnauthorizedException(errorMessage?.invalidCredentials);
     }
 
-    const matchedPassword = comparePassword(password, user.password);
-
+    // 3. Compare password
+    const matchedPassword = await comparePassword(
+      password,
+      authAccount.password,
+    );
     if (!matchedPassword) {
       throw new UnauthorizedException(errorMessage?.invalidCredentials);
     }
 
-    const accessToken = this.jwtService.sign(user, {
+    // 4. SECURITY FIX: Prepare a clean payload.
+    // NEVER put the whole 'user' object (password hash) in a JWT.
+    const payload = {
+      sub: authAccount.id,
+      email: authAccount.email,
+      role: authAccount?.user?.gymMemberships,
+    };
+
+    const accessToken = this.jwtService.sign(payload, {
       secret: process.env.ACCESS_SECRET_KEY,
       expiresIn: this.ACCESS_EXPIRES,
     });
 
-    const refreshToken = this.jwtService.sign(user, {
+    const refreshToken = this.jwtService.sign(payload, {
       secret: process.env.REFRESH_SECRET_KEY,
       expiresIn: this.REFRESH_EXPIRES,
     });
