@@ -18,7 +18,7 @@ export const successMessage = {
 };
 
 export const errorMessage = {
-  invalidCredentials: 'Invalid email or password',
+  invalidCredentials: 'Invalid credentials',
   userNotFound: 'User not found',
   authFailed: 'Authentication failed',
   unauthorized: 'You are not authorized to perform this action',

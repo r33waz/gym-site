@@ -20,13 +20,21 @@ export class AuthService {
   private readonly REFRESH_EXPIRES = '7d';
   async login(loginDto: ILoginDto) {
     const { email, password } = loginDto;
+    console.log(
+      '🚀 ~ AuthService ~ login ~ email, password, username :',
+      email,
+      password,
+    );
 
-    const user = await this.authRepo
+    const query = this.authRepo
       .createQueryBuilder('auth')
       .leftJoin('auth.user', 'user')
-      .addSelect(['user.role'])
-      .where('auth.email = :email', { email })
-      .getOne();
+      .where('auth.email = :email OR auth.username = :email', {
+        email,
+      })
+      .addSelect(['user.role']);
+
+    const user = await query.getOne();
 
     if (!user) {
       throw new UnauthorizedException(errorMessage?.invalidCredentials);

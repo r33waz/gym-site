@@ -1,13 +1,9 @@
-import { IsBoolean, IsEmail, IsString } from 'class-validator';
+import { IsBoolean, IsEmail, IsOptional, IsString } from 'class-validator';
 
 export class ILoginDto {
-  @IsEmail()
   @IsString()
   email?: string;
-
-  @IsString()
-  username?: string;
-
+  
   @IsString()
   password!: string;
 }
@@ -20,7 +16,8 @@ export class IForgetPasswordDto {
 
 export class IResetPasswordDto {
   @IsEmail()
-  email!: string;W
+  email!: string;
+  W;
 
   @IsString()
   otp!: string;

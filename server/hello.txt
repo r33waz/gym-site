@@ -1,2 +1,18 @@
 to create the module with  crud , dto and entioties files with out test files
 nest g resource attendance --no-spec     
+
+
+PORT = 80000
+
+
+JWT_SECRET_KEY = R33w@z@123
+
+ACCESS_SECRET_KEY = R33w@z@123
+REFRESH_SECRET_KEY = R33w@z@123
+
+
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=r33w@z@123
+DB_NAME=gym_db

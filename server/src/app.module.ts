@@ -15,6 +15,9 @@ import { PayRollModule } from './module/pay_roll/pay_roll.module';
 import { LeaveModule } from './module/leave/leave.module';
 import { AttendanceModule } from './module/attendance/attendance.module';
 import { configService } from './config/database/database.config';
+import { GymMenberModule } from './module/gym-menber/gym-menber.module';
+import { MembershipPackageModule } from './module/membership-package/membership-package.module';
+import { UserMemberShipModule } from './module/user-member-ship/user-member-ship.module';
 
 @Module({
   imports: [
@@ -33,6 +36,9 @@ import { configService } from './config/database/database.config';
     LeaveModule,
     PayRollModule,
     NotificationModule,
+    GymMenberModule,
+    MembershipPackageModule,
+    UserMemberShipModule,
   ],
   controllers: [],
   providers: [],

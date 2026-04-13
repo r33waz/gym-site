@@ -6,7 +6,15 @@ import { DataSource } from 'typeorm';
 // Resolve patterns relative to this config file
 // config is at: src/config/database/database.config.ts
 // entities are at: src/module/**/entities/*.entity.{ts,js}
-const entitiesPath = join(__dirname, '..', '..', 'module', '**', 'entities', '*.entity.{ts,js}');
+const entitiesPath = join(
+  __dirname,
+  '..',
+  '..',
+  'module',
+  '**',
+  'entities',
+  '*.entity.{ts,js}',
+);
 const migrationsPath = join(__dirname, '..', 'migrations', '*.{ts,js}');
 /**
  * Database Configuration
@@ -47,7 +55,7 @@ export const configService: TypeOrmModuleAsyncOptions = {
       autoLoadEntities: true,
       synchronize: true, // Always false for production
       migrationsRun: true, // Auto-run migrations on app startup
-      logging: config.nodeEnv !== 'production',
+      logging: false 
     };
   },
 };

@@ -18,13 +18,12 @@ export enum GENDER {
   OTHER = 'other',
 }
 
-export enum USER_ROLE {
-  SUPER_ADMIN = 'super_admin',
-  GYM_ADMIN = 'gym_admin',
-  GYM_STAFF = 'gym_staff',
+export enum GYM_ROLE {
+  OWNER = 'owner',
+  ADMIN = 'admin',
   MANAGER = 'manager',
   TRAINER = 'trainer',
-  USER = 'user',
+  MEMBER = 'member',
 }
 
 // Leave Types
@@ -52,12 +51,13 @@ export enum PAYMENT_STATUS {
 export enum PAYMENT_METHOD {
   CASH = 'cash',
   ONLINE = 'online',
+  CARD = 'card',
 }
 
 // Payment Type
 export enum PAYMENT_TYPE {
-  SUBSCRIPTION = 'subscription',
-  ONE_TIME = 'one_time',
+  MEMBERSHIP = 'membership',
+  SALE = 'sale',
 }
 
 // Notification Type

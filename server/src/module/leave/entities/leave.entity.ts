@@ -1,24 +1,41 @@
-
-import { Column, Entity, ManyToOne } from "typeorm";
-import { BaseEntity } from "../../../shared/baseEntity";
-import { User } from "../../user/entities/user.entity";
-import { LEAVE_STATUS } from "../../../constant/enum";
-
+import { Column, Entity, Index, ManyToOne } from 'typeorm';
+import { BaseEntity } from '../../../shared/baseEntity';
+import { User } from '../../user/entities/user.entity';
+import { LEAVE_STATUS } from '../../../constant/enum';
+import { Gym } from '../../gym/entities/gym.entity';
 
 @Entity()
+@Index('IDX_LEAVE_USER_STATUS', ['user', 'status'])
+@Index('IDX_LEAVE_GYM_DATE', ['gym', 'startDate'])
+/**
+ * Represents a leave request for a user (employee/member) at a gym.
+ * Includes reason, dates, status (e.g., pending/approved), and gym association.
+ *
+ * Key Fields: reason, startDate, endDate, status (LEAVE_STATUS)
+ *
+ * Row Connections:
+ * | Related Entity | Relation Type | Description |
+ * |----------------|---------------|-------------|
+ * | User | N:1 @ManyToOne | user |
+ * | Gym | N:1 @ManyToOne | gym |
+ * Indexes: user+status, gym+startDate.
+ */
 export class Leave extends BaseEntity {
-  @ManyToOne(() => User, (user) => user.leaves)
-  user!: User;
+@ManyToOne(() => User)
+  user!: User; // User requesting leave
 
-  @Column({ type: "date" })
-  startDate!: Date;
+  @ManyToOne(() => Gym)
+  gym!: Gym; // Associated gym
 
-  @Column({ type: "date" })
-  endDate!: Date;
+  @Column()
+  reason!: string; // Reason for leave
 
-  @Column({ type: "enum", enum: LEAVE_STATUS, default: LEAVE_STATUS.PENDING })
-  status!: LEAVE_STATUS;
+  @Column()
+  startDate!: Date; // Leave start date
 
-  @Column({ nullable: true })
-  reason?: string;
+  @Column()
+  endDate!: Date; // Leave end date
+
+  @Column({ type: 'enum', enum: LEAVE_STATUS, default: LEAVE_STATUS.PENDING })
+  status!: string; // Leave status (PENDING, APPROVED, REJECTED)
 }
