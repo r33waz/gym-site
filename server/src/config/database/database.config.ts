@@ -3,19 +3,24 @@ import { TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
 import { join } from 'path';
 import { DataSource } from 'typeorm';
 
-// Resolve patterns relative to this config file
-// config is at: src/config/database/database.config.ts
-// entities are at: src/module/**/entities/*.entity.{ts,js}
+// Ensure env vars are available for TypeORM CLI (migration:generate, etc.)
+// NOTE: dotenv should be installed if you want to load .env at runtime.
+const dotenv = require('dotenv');
+dotenv.config();
+
+
+// This glob must match actual filesystem locations so TypeORM can build relation metadata.
 const entitiesPath = join(
   __dirname,
   '..',
   '..',
-  'module',
+  'core',
   '**',
   'entities',
   '*.entity.{ts,js}',
 );
-const migrationsPath = join(__dirname, '..', 'migrations', '*.{ts,js}');
+
+const migrationsPath = join(__dirname, '..','..', 'migrations', '*.{ts,js}');
 /**
  * Database Configuration
  *
@@ -49,11 +54,11 @@ export const configService: TypeOrmModuleAsyncOptions = {
       database: config.database,
 
       entities: [entitiesPath],
-      migrationsTableName: 'migrations',
+      // migrationsTableName: 'migrations',
       migrations: [migrationsPath],
 
       autoLoadEntities: true,
-      synchronize: true, // Always false for production
+      synchronize: false, // Always false for production
       migrationsRun: true, // Auto-run migrations on app startup
       logging: false 
     };

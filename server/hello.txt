@@ -16,3 +16,25 @@ DB_PORT=5432
 DB_USER=postgres
 DB_PASSWORD=r33w@z@123
 DB_NAME=gym_db
+
+
+
+
+import { Injectable } from '@nestjs/common';
+import {
+  DataSource,
+  EntityManager,
+} from 'typeorm';
+
+@Injectable()
+export class TransactionService {
+  constructor(
+    private readonly dataSource: DataSource,
+  ) {}
+
+  async execute<T>(
+    work: (manager: EntityManager) => Promise<T>,
+  ): Promise<T> {
+    return this.dataSource.transaction(work);
+  }
+}

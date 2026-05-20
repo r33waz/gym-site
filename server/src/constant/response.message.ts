@@ -1,9 +1,13 @@
 export const successMessage = {
+  user: {
+    userCreate: 'User created successfully',
+    userUpdate: 'User updated successfully',
+    userDelete: 'User deleted successfully',
+  },
   login: 'Login successful',
   logout: 'Logout successful',
   register: 'Registration successful',
-  userCreate: 'User created successfully',
-  userUpdate: 'User updated successfully',
+
   gymCreate: 'Gym created successfully',
   gymUpdate: 'Gym updated successfully',
   employeeCreate: 'Employee added successfully',
@@ -18,6 +22,11 @@ export const successMessage = {
 };
 
 export const errorMessage = {
+  user: {
+    emailExist: 'Email already exist',
+    usernameExist: 'Usename already exist',
+    userNotfound: 'User not found',
+  },
   invalidCredentials: 'Invalid credentials',
   userNotFound: 'User not found',
   authFailed: 'Authentication failed',

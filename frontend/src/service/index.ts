@@ -53,6 +53,7 @@ apiInstance.interceptors.response.use(
   },
 
   (error: AxiosError) => {
+    console.log("🚀 ~ error:", error);
     // Check if server responded with 403 Unauthorized
     if (error.response?.status === 403) {
       // ⚠️ IMPORTANT:
@@ -61,9 +62,12 @@ apiInstance.interceptors.response.use(
       window.location.replace("/login");
     }
 
-    // Reject the error so it can be handled by:
-    // - TanStack Query
-    // - or .catch() in components
+    const customError = (error.response?.data as any)?.message || error.message;
+
+    // 3. Create a new Error object or modify the existing one
+    // This ensures that 'err.message' in TanStack Query is actually your backend message.
+    error.message = customError;
+
     return Promise.reject(error);
   },
 );

@@ -26,6 +26,11 @@ export enum GYM_ROLE {
   MEMBER = 'member',
 }
 
+export enum SYSTEM_ROLE {
+  SUPER_ADMIN = 'super_admin',
+  USER = 'user',
+}
+
 // Leave Types
 export enum LEAVE_TYPE {
   SICK = 'sick',

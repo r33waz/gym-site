@@ -2,10 +2,10 @@ import GenericInput from "@/components/common/GenericInput";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import type { ILoginInterface } from "../../../service/auth/schema/login.schema";
-import { loginSchema } from "../../../service/auth/schema/login.schema";
 import { Button } from "@/components/ui/button";
-import { useLogin } from "@/service/auth/auth.query";
+import type { ILoginInterface } from "@/interface/auth.interface";
+import { loginSchema } from "@/service/auth/auth.schema";
+import { useLogin } from "@/service/auth/auth.service";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
