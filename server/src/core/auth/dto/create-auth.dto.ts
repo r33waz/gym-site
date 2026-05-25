@@ -6,6 +6,7 @@ export class ILoginDto {
   
   @IsString()
   password: string;
+  
 }
 
 export class IForgetPasswordDto {

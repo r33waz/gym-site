@@ -14,7 +14,7 @@ export const apiRequest = async <
 ): Promise<TResponse> => {
   const { apiDetails, pathVariables, queryParams, data, extraConfig } = options;
 
-  let url = apiDetails.controllerName;
+  let url = apiDetails.apiRouteName;
 
   // 1. Path Variable Replacement
   if (pathVariables) {

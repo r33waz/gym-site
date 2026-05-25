@@ -1,7 +1,7 @@
 import type { HTTP_METHOD, RequestBody } from "@/interface/enum/enum";
 
 export interface ApiDetails {
-  controllerName: string;
+  apiRouteName: string;
   requestMethod: HTTP_METHOD;
   queryKeyName?: string;
   // Use a string literal or enum for consistency

@@ -4,7 +4,7 @@ export const AuthApi = {
   // login endpoint
   authLogin: {
     queryKeyName: "GET_ALL_USERS",
-    controllerName: "/auth/login",
+    apiRouteName: "/auth/login",
     requestMethod: HTTP_METHOD.POST,
   },
 };

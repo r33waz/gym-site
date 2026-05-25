@@ -23,12 +23,13 @@ export class AuthService {
 
     // 1. Fixed the 'user' reserved keyword by using 'u' alias
     // 2. Used leftJoinAndSelect to automatically handle the mapping safely
+    const identifier = email;
+
     const authAccount = await this.authRepo
       .createQueryBuilder('auth')
       .leftJoinAndSelect('auth.user', 'u')
-      .where('auth.email = :identifier OR auth.username = :identifier', {
-        identifier: email,
-      })
+      .where('auth.email = :identifier', { identifier })
+      .orWhere('u.username = :identifier', { identifier })
       .getOne();
 
     if (!authAccount) {

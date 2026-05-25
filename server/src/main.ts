@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import cookieParser from 'cookie-parser';
 import { ValidationPipe } from '@nestjs/common';
+import { ValidationExceptionFilter } from './utils/custmeValidation';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,6 +15,8 @@ async function bootstrap() {
       transform: true, // Bonus: automatically transforms types in DTOs
     }),
   );
+
+  app.useGlobalFilters(new ValidationExceptionFilter());
 
   // Logic to handle potential undefined or multiple origins
   const origin = process.env.FORNTEND_URL;
@@ -31,4 +34,4 @@ async function bootstrap() {
   console.log(`Application is running on: http://localhost:${port}`);
 }
 
-bootstrap()
+bootstrap();

@@ -1,4 +1,4 @@
-import { Entity, Column, OneToOne } from 'typeorm';
+import { Entity, Column, OneToOne, JoinColumn } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
 import { BaseEntity } from '../../../shared/baseEntity';
 
@@ -17,6 +17,7 @@ export class Auth extends BaseEntity {
   // can disable login if needed
 
   @OneToOne(() => User, (user) => user.auth)
+  @JoinColumn()
   user: User;
   // back reference to user profile
 }

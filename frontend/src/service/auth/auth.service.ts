@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { AuthApi } from "./auth.api";
 import { apiRequest } from "../api.request";
 import type { ILoginInterface } from "@/interface/auth.interface";
-import { showSuccessMessage } from "@/utils/message";
+import { showErrorsMessage, showSuccessMessage } from "@/utils/message";
 
 /**
  * LOGIN HOOK
@@ -25,7 +25,7 @@ export const useLogin = () => {
       return showSuccessMessage(res.message || "Login successful");
     },
     onError: (err) => {
-      console.error("Login failed:", err);
+      showErrorsMessage(err || "Login successful");
     },
   });
 };

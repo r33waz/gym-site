@@ -5,7 +5,7 @@ import { Gym } from '../../gym/entities/gym.entity';
 import { SYSTEM_ROLE } from '../../../constant/enum';
 import { BaseEntity } from '../../../shared/baseEntity';
 
-@Entity()
+@Entity('user')
 @Index('IDX_USER_USERNAME', ['username']) // fast lookup for login/search
 export class User extends BaseEntity {
   @Column()

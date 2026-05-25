@@ -5,6 +5,7 @@ export interface ICURRENT_USER {
   email: string;
   username: string;
   systemRole: string;
+  gymId?: string;
 }
 
 export interface AuthRequest extends Request {

@@ -6,10 +6,10 @@ import { Button } from "@/components/ui/button";
 import type { ILoginInterface } from "@/interface/auth.interface";
 import { loginSchema } from "@/service/auth/auth.schema";
 import { useLogin } from "@/service/auth/auth.service";
+import { Eye, EyeClosed } from "lucide-react";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
-  console.log("🚀 ~ Login ~ showPassword:", showPassword);
 
   const { control, handleSubmit } = useForm<ILoginInterface>({
     resolver: yupResolver(loginSchema),
@@ -83,7 +83,7 @@ const Login = () => {
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-4 top-7.5 h-6 w-6 flex items-center bg-none justify-center text-xs text-primary  rounded-sm cursor-pointer"
               >
-                {showPassword ? "Hide" : "Show"}
+                {showPassword ? <Eye size={16} /> : <EyeClosed size={16} />}
               </button>
             </div>
 
@@ -103,14 +103,6 @@ const Login = () => {
               Sign In
             </Button>
           </form>
-
-          {/* Footer */}
-          <p className="text-sm text-center mt-6 text-muted-foreground">
-            Don’t have an account?{" "}
-            <span className="text-primary cursor-pointer hover:underline">
-              Sign up
-            </span>
-          </p>
         </div>
       </div>
     </div>
