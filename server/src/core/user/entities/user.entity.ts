@@ -2,7 +2,7 @@ import { Entity, Column, OneToOne, OneToMany, Index } from 'typeorm';
 import { Auth } from '../../auth/entities/auth.entity';
 import { GymMember } from '../../gym-member/entities/gym-member.entity';
 import { Gym } from '../../gym/entities/gym.entity';
-import { SYSTEM_ROLE } from '../../../constant/enum';
+import { SYSTEM_ROLE } from '../../../constant/enum/common.enum';
 import { BaseEntity } from '../../../shared/baseEntity';
 
 @Entity('user')

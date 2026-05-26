@@ -23,7 +23,7 @@ interface ValidationError {
 }
 
 interface ValidationErrorResponse {
-  statusCode: number;
+  status: number;
   error: string;
   message: string;
   errors: ValidationError[];
@@ -46,7 +46,7 @@ export class ValidationExceptionFilter implements ExceptionFilter {
       const errors = this.formatValidationErrors(exceptionResponse.message);
 
       const errorResponse: ValidationErrorResponse = {
-        statusCode: 400,
+        status: 400,
         error: 'Validation Error',
         message: 'One or more validation errors occurred',
         errors: errors,
@@ -60,10 +60,10 @@ export class ValidationExceptionFilter implements ExceptionFilter {
 
     // Not a validation error, let the default handler process it
     response.status(400).json({
-      statusCode: 400,
-      error: 'Bad Request',
+      status: 400,
+      // error: 'Bad Request',
       message: exceptionResponse.message || 'Bad request',
-      timestamp: new Date().toISOString(),
+      // timestamp: new Date().toISOString(),
     });
   }
 

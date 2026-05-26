@@ -7,7 +7,7 @@ import {
   MinLength,
   IsUUID,
 } from 'class-validator';
-import { SYSTEM_ROLE, GYM_ROLE } from '../../../constant/enum';
+import { SYSTEM_ROLE, GYM_ROLE } from '../../../constant/enum/common.enum';
 
 export class CreateUserDto {
   @IsEmail({}, { message: 'Invalid email format' })

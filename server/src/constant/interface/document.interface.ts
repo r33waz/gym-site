@@ -1,0 +1,41 @@
+export enum DOCUMENT_TYPE {
+  // =========================
+  // GYM LEGAL DOCUMENTS
+  // =========================
+  GYM_PAN = 'GYM_PAN',
+  GYM_VAT = 'GYM_VAT',
+  GYM_REGISTRATION = 'GYM_REGISTRATION',
+  GYM_TAX_CLEARANCE = 'GYM_TAX_CLEARANCE',
+//   GYM_MUNICIPAL_LICENSE = 'GYM_MUNICIPAL_LICENSE',
+
+  // =========================
+  // OWNER DOCUMENTS
+  // =========================
+  OWNER_CITIZENSHIP = 'OWNER_CITIZENSHIP',
+  OWNER_NID = 'OWNER_NID',
+//   OWNER_PASSPORT = 'OWNER_PASSPORT',
+  OWNER_PHOTO = 'OWNER_PHOTO',
+
+  // =========================
+  // USER / MEMBER DOCUMENTS
+  // =========================
+  USER_CITIZENSHIP = 'USER_CITIZENSHIP',
+  USER_NID = 'USER_NID',
+  USER_PHOTO = 'USER_PHOTO',
+//   USER_MEDICAL_REPORT = 'USER_MEDICAL_REPORT',
+//   USER_FITNESS_ASSESSMENT = 'USER_FITNESS_ASSESSMENT',
+
+  // =========================
+  // TRAINER DOCUMENTS
+  // =========================
+  TRAINER_CERTIFICATE = 'TRAINER_CERTIFICATE',
+  TRAINER_LICENSE = 'TRAINER_LICENSE',
+  TRAINER_EXPERIENCE_LETTER = 'TRAINER_EXPERIENCE_LETTER',
+
+//   // =========================
+//   // PAYMENT / ACCOUNTING
+//   // =========================
+//   PAYMENT_RECEIPT = 'PAYMENT_RECEIPT',
+//   INVOICE = 'INVOICE',
+//   MEMBERSHIP_AGREEMENT = 'MEMBERSHIP_AGREEMENT',
+}

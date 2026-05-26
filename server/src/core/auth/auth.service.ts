@@ -33,7 +33,7 @@ export class AuthService {
       .getOne();
 
     if (!authAccount) {
-      throw new UnauthorizedException(errorMessage?.invalidCredentials);
+      throw new UnauthorizedException(errorMessage?.auth.invalidCredentials);
     }
 
     // 3. Compare password
@@ -42,7 +42,7 @@ export class AuthService {
       authAccount.password,
     );
     if (!matchedPassword) {
-      throw new UnauthorizedException(errorMessage?.invalidCredentials);
+      throw new UnauthorizedException(errorMessage?.auth.invalidCredentials);
     }
 
     // 4. SECURITY FIX: Prepare a clean payload.

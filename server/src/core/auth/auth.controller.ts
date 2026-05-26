@@ -11,7 +11,7 @@ import {
 import { AuthService } from './auth.service';
 import { ILoginDto } from './dto/create-auth.dto';
 import type { Response } from 'express';
-import { HTTP_CODE } from '../../constant/enum';
+import { HTTP_CODE } from '../../constant/enum/common.enum';
 import { successMessage } from '../../constant/response.message';
 
 @Controller('auth')
@@ -45,7 +45,7 @@ export class AuthController {
 
     return {
       status: HTTP_CODE.SUCCESS,
-      message: successMessage.login,
+      message: successMessage.auth.login,
     };
   }
 }

@@ -3,14 +3,20 @@ import { User } from '../../user/entities/user.entity';
 import { GymMember } from '../../gym-member/entities/gym-member.entity';
 import { BaseEntity } from '../../../shared/baseEntity';
 import { Product } from '../../product/entities/product.entity';
+import { GYM_STATUS } from '../../../constant/enum/common.enum';
+import { GymBranch } from '../../gym_branch/entities/gym_branch.entity';
 
 @Entity('gym')
-@Index('IDX_GYM_NAME', ['name']) // fast search by gym name
+@Index('IDX_GYM_NAME_ENGLISH', ['gymnameEn']) // fast search by gym name
+@Index('IDX_GYM_NAME_NEPALI', ['gymnameNp']) // fast search by gym name
 @Index('IDX_GYM_CITY', ['city']) // filtering gyms by location
 export class Gym extends BaseEntity {
   @Column()
-  name: string;
+  gymnameEn: string;
   // gym name shown publicly
+
+  @Column()
+  gymnameNp: string;
 
   @Column()
   address: string;
@@ -21,15 +27,21 @@ export class Gym extends BaseEntity {
   // city for filtering/search
 
   @Column()
-  country: string;
-  // country for multi-region SaaS
+  phoneNumer: String;
+
+  @Column()
+  telNumber: string;
+
+  // @Column()
+  // country: string;
+  // // country for multi-region SaaS
 
   @Column('text', { array: true, nullable: true })
   documents?: string[];
   // legal documents, licenses, etc.
 
-  @Column({ default: true })
-  isActive: boolean;
+  @Column({ type: 'enum', enum: GYM_STATUS, default: GYM_STATUS.PENDING })
+  status: GYM_STATUS;
   // gym active/inactive status
 
   @ManyToOne(() => User, (user) => user.ownedGyms, {
@@ -45,4 +57,7 @@ export class Gym extends BaseEntity {
 
   @OneToMany(() => Product, (product) => product.gym)
   products: Product[];
+
+  @OneToMany(() => GymBranch, (branch) => branch.gym)
+  branches: GymBranch[];
 }

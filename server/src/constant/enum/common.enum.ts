@@ -8,27 +8,27 @@ export enum HTTP_CODE {
 }
 
 export enum STATUS {
-  ACTIVE = 'active',
-  INACTIVE = 'inactive',
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
 }
 
 export enum GENDER {
-  MALE = 'male',
-  FEMALE = 'female',
-  OTHER = 'other',
+  MALE = 'MALE',
+  FEMALE = 'FEMALE',
+  OTHER = 'OTHER',
 }
 
 export enum GYM_ROLE {
-  OWNER = 'owner',
-  ADMIN = 'admin',
-  MANAGER = 'manager',
-  TRAINER = 'trainer',
-  MEMBER = 'member',
+  OWNER = 'OWNER',
+  ADMIN = 'ADMIN',
+  MANAGER = 'MANAGER',
+  TRAINER = 'TRAINER',
+  MEMBER = 'MEMBER',
 }
 
 export enum SYSTEM_ROLE {
-  SUPER_ADMIN = 'super_admin',
-  USER = 'user',
+  SUPER_ADMIN = 'SUPER_ADMIN',
+  USER = 'USER',
 }
 
 // Leave Types
@@ -45,32 +45,39 @@ export enum LEAVE_STATUS {
   REJECTED = 'rejected',
 }
 
+export enum GYM_STATUS {
+  PENDING = 'PENDING',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
+  SUSPENDED = 'SUSPENDED',
+}
+
 // Payment Status
 export enum PAYMENT_STATUS {
-  PENDING = 'pending',
-  APPROVED = 'approved',
-  REJECTED = 'rejected',
+  PENDING = 'PENDING',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
 }
 
 // Payment Method
 export enum PAYMENT_METHOD {
-  CASH = 'cash',
-  ONLINE = 'online',
-  CARD = 'card',
+  CASH = 'cCASHash',
+  ONLINE = 'ONLINE',
+  CARD = 'CARD',
 }
 
 // Payment Type
 export enum PAYMENT_TYPE {
-  MEMBERSHIP = 'membership',
-  SALE = 'sale',
+  MEMBERSHIP = 'MEMBERSHIP',
+  SALE = 'SALE',
 }
 
 // Notification Type
 export enum NOTIFICATION_TYPE {
-  SUCCESS = 'success',
-  ERROR = 'error',
-  WARNING = 'warning',
-  INFO = 'info',
+  SUCCESS = 'SUCCESS',
+  ERROR = 'ERROR',
+  WARNING = 'WARNING',
+  INFO = 'INFO',
 }
 
 // notification

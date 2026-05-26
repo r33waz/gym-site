@@ -1,7 +1,7 @@
 import { Column, Entity, Index, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../../../shared/baseEntity';
 import { User } from '../../user/entities/user.entity';
-import { LEAVE_STATUS } from '../../../constant/enum';
+import { LEAVE_STATUS } from '../../../constant/enum/common.enum';
 import { Gym } from '../../gym/entities/gym.entity';
 
 @Entity()

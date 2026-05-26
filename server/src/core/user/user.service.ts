@@ -11,7 +11,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 
 import { generatePassword } from '../../utils/password.utils';
 import { TransactionService } from '../shared/transaction.service';
-import { GYM_ROLE, SYSTEM_ROLE } from '../../constant/enum';
+import { GYM_ROLE, SYSTEM_ROLE } from '../../constant/enum/common.enum';
 import { errorMessage, successMessage } from '../../constant/response.message';
 import { ICURRENT_USER } from '../../interface/auth.interface';
 import { Gym } from '../gym/entities/gym.entity';
@@ -28,15 +28,6 @@ export class UserService {
   async createUser(createUserDto: CreateUserDto, currentUser: ICURRENT_USER) {
     const { email, password, systemRole, username, gymId, gymRole } =
       createUserDto;
-    console.log(
-      '🚀 ~ UserService ~ createUser ~  email, password, systemRole, username, gymId, gymRole:',
-      email,
-      password,
-      systemRole,
-      username,
-      gymId,
-      gymRole,
-    );
 
     try {
       return await this.transactionService.executeTransaction(
@@ -86,7 +77,7 @@ export class UserService {
           });
 
           if (!existingGym) {
-            throw new BadRequestException(errorMessage?.gymNotFound);
+            throw new BadRequestException(errorMessage.gym.gymNotFound);
           }
 
           // 2. Create user
@@ -139,7 +130,7 @@ export class UserService {
       const userRepo = this.dataSource.getRepository(User);
       const user = await userRepo.findOneBy({ id: userId });
       if (!user) {
-        throw new BadRequestException(errorMessage?.user?.userNotfound);
+        throw new BadRequestException(errorMessage?.user?.userNotFound);
       }
 
       await userRepo.remove(user);
