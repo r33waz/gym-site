@@ -28,21 +28,24 @@ export enum GYM_ROLE {
 
 export enum SYSTEM_ROLE {
   SUPER_ADMIN = 'SUPER_ADMIN',
-  USER = 'USER',
+  GYM_OWNER = 'GYM_OWNER',
+  MANAGER = 'MANAGER',
+  TRAINER = 'TRAINER',
+  STAFF = 'STAFF',
 }
 
 // Leave Types
 export enum LEAVE_TYPE {
-  SICK = 'sick',
-  VACATION = 'vacation',
-  OTHER = 'other',
+  SICK = 'SICK',
+  VACATION = 'VACATION',
+  OTHER = 'OTHER',
 }
 
 // Leave Status
 export enum LEAVE_STATUS {
-  PENDING = 'pending',
-  APPROVED = 'approved',
-  REJECTED = 'rejected',
+  PENDING = 'PENDING',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
 }
 
 export enum GYM_STATUS {
@@ -52,16 +55,9 @@ export enum GYM_STATUS {
   SUSPENDED = 'SUSPENDED',
 }
 
-// Payment Status
-export enum PAYMENT_STATUS {
-  PENDING = 'PENDING',
-  APPROVED = 'APPROVED',
-  REJECTED = 'REJECTED',
-}
-
 // Payment Method
 export enum PAYMENT_METHOD {
-  CASH = 'cCASHash',
+  CASH = 'CASH',
   ONLINE = 'ONLINE',
   CARD = 'CARD',
 }
@@ -80,8 +76,82 @@ export enum NOTIFICATION_TYPE {
   INFO = 'INFO',
 }
 
-// notification
+// Notification Status
 export enum NotificationStatus {
   UNREAD = 'UNREAD',
   READ = 'READ',
+}
+
+export enum AuthErrorCode {
+  AUTH_REQUIRED = 'AUTH_REQUIRED',
+  ACCESS_TOKEN_EXPIRED = 'ACCESS_TOKEN_EXPIRED',
+  INVALID_ACCESS_TOKEN = 'INVALID_ACCESS_TOKEN',
+}
+
+export enum PLAN_TYPE {
+  BASIC = 'BASIC',
+  PRO = 'PRO',
+  ENTERPRISE = 'ENTERPRISE',
+}
+
+export enum PLAN_FEATURE {
+  ATTENDANCE = 'ATTENDANCE',
+  BRANCH = 'BRANCH',
+  PRODUCT = 'PRODUCT',
+  NOTIFICATION = 'NOTIFICATION',
+  REPORT = 'REPORT',
+  ADVANCED_REPORT = 'ADVANCED_REPORT',
+}
+
+export enum MEMBERSHIP_FEATURE {
+  GYM_ACCESS = 'GYM_ACCESS',
+  POOL_ACCESS = 'POOL_ACCESS',
+  PERSONAL_TRAINER = 'PERSONAL_TRAINER',
+  DIET_PLAN = 'DIET_PLAN',
+  LOCKER = 'LOCKER',
+  SAUNA = 'SAUNA',
+}
+
+export enum SUBSCRIPTION_STATUS {
+  TRIAL = 'TRIAL',
+  ACTIVE = 'ACTIVE',
+  EXPIRED = 'EXPIRED',
+  CANCELLED = 'CANCELLED',
+}
+
+export enum PAYMENT_STATUS {
+  PENDING = 'PENDING',
+  SUCCESS = 'SUCCESS',
+  FAILED = 'FAILED',
+  REFUNDED = 'REFUNDED',
+}
+
+export enum PAYMENT_GATEWAY {
+  ESEWA = 'ESEWA',
+  KHALTI = 'KHALTI',
+}
+
+export enum NOTIFICATION_TYPE {
+  MEMBERSHIP_EXPIRY = 'MEMBERSHIP_EXPIRY',
+  PLAN_EXPIRY = 'PLAN_EXPIRY',
+  DOCUMENT_APPROVED = 'DOCUMENT_APPROVED',
+  DOCUMENT_REJECTED = 'DOCUMENT_REJECTED',
+}
+
+export enum DOCUMENT_TYPE {
+  GYM_LICENSE = 'GYM_LICENSE',
+  GYM_REGISTRATION = 'GYM_REGISTRATION',
+  OWNER_ID = 'OWNER_ID',
+}
+
+export enum DOCUMENT_STATUS {
+  PENDING = 'PENDING',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
+}
+
+export enum MEMBER_STATUS {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  SUSPENDED = 'SUSPENDED',
 }

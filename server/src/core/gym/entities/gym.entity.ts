@@ -1,10 +1,20 @@
-import { Entity, Column, ManyToOne, OneToMany, Index } from 'typeorm';
+import {
+  Entity,
+  Column,
+  ManyToOne,
+  OneToMany,
+  Index,
+  OneToOne,
+  JoinColumn,
+} from 'typeorm';
 import { User } from '../../user/entities/user.entity';
 import { GymMember } from '../../gym-member/entities/gym-member.entity';
 import { BaseEntity } from '../../../shared/baseEntity';
 import { Product } from '../../product/entities/product.entity';
 import { GYM_STATUS } from '../../../constant/enum/common.enum';
 import { GymBranch } from '../../gym_branch/entities/gym_branch.entity';
+import { Address } from '../../address/entities/address.entity';
+import { MembershipPackage } from '../../membership-package/entities/membership-package.entity';
 
 @Entity('gym')
 @Index('IDX_GYM_NAME_ENGLISH', ['gymnameEn']) // fast search by gym name
@@ -12,52 +22,64 @@ import { GymBranch } from '../../gym_branch/entities/gym_branch.entity';
 @Index('IDX_GYM_CITY', ['city']) // filtering gyms by location
 export class Gym extends BaseEntity {
   @Column()
-  gymnameEn: string;
+  gymname: string;
   // gym name shown publicly
 
-  @Column()
-  gymnameNp: string;
-
-  @Column()
-  address: string;
+  @OneToOne(() => Address, (address) => address.gym_Address)
+  @JoinColumn()
+  address_details: Address;
   // full address of gym
 
   @Column()
-  city: string;
-  // city for filtering/search
+  phoneNumer: string;
+
+  @Column({ type: 'enum', enum: GYM_STATUS, default: GYM_STATUS.PENDING })
+  status: string;
 
   @Column()
-  phoneNumer: String;
+  logo: string;
+
+  @Column()
+  trialEndsAt: Date;
+
+  @Column({ default: false })
+  isTrialUsed: boolean;
+  // prevent multiple trials
 
   @Column()
   telNumber: string;
 
-  // @Column()
-  // country: string;
-  // // country for multi-region SaaS
-
-  @Column('text', { array: true, nullable: true })
-  documents?: string[];
-  // legal documents, licenses, etc.
-
-  @Column({ type: 'enum', enum: GYM_STATUS, default: GYM_STATUS.PENDING })
-  status: GYM_STATUS;
-  // gym active/inactive status
-
-  @ManyToOne(() => User, (user) => user.ownedGyms, {
-    eager: true,
+  // one gym can have multiple gym
+  @OneToMany(() => User, (user) => user.ownedGyms, {
+    nullable: false,
     onDelete: 'RESTRICT',
   })
-  owner: User;
-  // user who created this gym (1 gym → 1 owner)
+  @JoinColumn({ name: 'owner_id' })
+  ownerId: User;
 
-  @OneToMany(() => GymMember, (gm) => gm.gym)
-  members: GymMember[];
-  // all users linked to this gym
+  // gym can have the muliple branches
 
-  @OneToMany(() => Product, (product) => product.gym)
-  products: Product[];
+  @OneToMany(() => GymBranch, (gymBranch) => gymBranch.gym_head_office)
+  @JoinColumn()
+  gym_branches: GymBranch[];
 
-  @OneToMany(() => GymBranch, (branch) => branch.gym)
-  branches: GymBranch[];
+  // staff of the gym that role is the owner
+
+  @OneToMany(() => User, (user) => user.gym)
+  staff: User[];
+
+  // notifications of for the gym
+  @OneToMany(()=>Notification,()=>())
+  @JoinColumn("notification_id")
+  notification:Notification
+
+  // documents of the gyms
+  @OneToMany(()=>Document,()=>())
+  @JoinColumn("document_id")
+
+  // membership of the gym
+  @OneToMany(()=>MembershipPackage,()=>())
+  @JoinColumn("memberShip_id")
+
+  // subscription of the gym
 }

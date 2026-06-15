@@ -21,6 +21,7 @@ import { GymModule } from './core/gym/gym.module';
 import { SystemPlanModule } from './core/system_plan/system_plan.module';
 import { SharedModule } from './core/shared/shared.module';
 import { GymBranchModule } from './core/gym_branch/gym_branch.module';
+import { AddressModule } from './core/address/address.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { GymBranchModule } from './core/gym_branch/gym_branch.module';
     SystemPlanModule,
     SharedModule,
     GymBranchModule,
+    AddressModule,
   ],
   controllers: [],
   providers: [],

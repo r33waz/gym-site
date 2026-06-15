@@ -12,6 +12,7 @@ import { errorMessage, successMessage } from '../../constant/response.message';
 import { GYM_STATUS, HTTP_CODE } from '../../constant/enum/common.enum';
 import { User } from '../user/entities/user.entity';
 import { ICURRENT_USER } from '../../interface/auth.interface';
+import { ApiResponse } from '../../constant/interface/api.response';
 
 @Injectable()
 export class GymService {
@@ -55,20 +56,11 @@ export class GymService {
         status: GYM_STATUS.PENDING,
       });
 
-      const savedGym = await this.gymRepo.save(newGym);
-
-      return {
-        success: true,
-        status: HTTP_CODE.SUCCESS,
-        message: successMessage.gym.gymCreate,
-      };
+      return await this.gymRepo.save(newGym);
     } catch (error) {
-      console.log('🚀 ~ GymService ~ createGym ~ error:', error);
-
       if (error instanceof BadRequestException) {
         throw error;
       }
-
       // Unexpected errors
       throw new InternalServerErrorException(errorMessage.serverError);
     }
@@ -78,15 +70,51 @@ export class GymService {
     return `This action returns all gym`;
   }
 
-  findById(id: number) {
-    return `This action returns a #${id} gym`;
+  async findById(id: string) {
+    try {
+      const gym = await this.gymRepo.findOne({ where: { id } });
+      if (!gym) {
+        throw new BadRequestException({
+          success: false,
+          message: errorMessage?.gym?.gymNotFound,
+        });
+      }
+
+      return gym;
+    } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
+      // Unexpected errors
+      throw new InternalServerErrorException(errorMessage.serverError);
+    }
   }
 
   updateGym(id: number, updateGymDto: UpdateGymDto) {
     return `This action updates a #${id} gym`;
   }
 
-  deleteGym(id: number) {
-    return `This action removes a #${id} gym`;
+  async deleteGym(id: string) {
+    try {
+      const gym = await this.gymRepo.findOne({ where: { id } });
+      if (!gym) {
+        throw new BadRequestException({
+          success: false,
+          message: errorMessage?.gym?.gymNotFound,
+        });
+      }
+
+      const deletegym = await this.gymRepo.delete(gym?.id);
+      if (deletegym) {
+        return true;
+      }
+      
+    } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
+      // Unexpected errors
+      throw new InternalServerErrorException(errorMessage.serverError);
+    }
   }
 }

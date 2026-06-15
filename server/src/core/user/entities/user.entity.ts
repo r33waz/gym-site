@@ -1,4 +1,4 @@
-import { Entity, Column, OneToOne, OneToMany, Index } from 'typeorm';
+import { Entity, Column, OneToOne, OneToMany, Index, ManyToOne, JoinColumn } from 'typeorm';
 import { Auth } from '../../auth/entities/auth.entity';
 import { GymMember } from '../../gym-member/entities/gym-member.entity';
 import { Gym } from '../../gym/entities/gym.entity';
@@ -9,25 +9,27 @@ import { BaseEntity } from '../../../shared/baseEntity';
 @Index('IDX_USER_USERNAME', ['username']) // fast lookup for login/search
 export class User extends BaseEntity {
   @Column()
-  username: string; // display + login identifier (optional)
+  first_name: string;
 
-  @Column({
-    type: 'enum',
-    enum: SYSTEM_ROLE,
-    default: SYSTEM_ROLE.USER,
-  })
-  systemRole?: SYSTEM_ROLE;
-  // global role (NOT gym-related)
+  @Column()
+  middle_name: string;
 
-  @OneToOne(() => Auth, (auth) => auth.user, { onDelete: 'CASCADE' })
+  @Column()
+  last_name: string;
+
+  @OneToOne(() => Auth, (auth) => auth.userId)
   auth: Auth;
-  // link to authentication credentials (email/password)
 
-  @OneToMany(() => Gym, (gym) => gym.owner)
+  // branch id
+
+  // profile id
+
+  // owned Gyms
+  @OneToMany(() => Gym, (gym) => gym.ownerId)
   ownedGyms: Gym[];
-  // gyms created by this user
 
-  @OneToMany(() => GymMember, (gm) => gm.user)
-  memberships: GymMember[];
-  // all gyms this user belongs to (important for multi-gym SaaS)
+  // which gym this user belongs to (null for gym owner before gym creation)
+  @ManyToOne(() => Gym, (gym) => gym.staff, { nullable: true })
+  @JoinColumn({ name: 'gym_id' })
+  gym: Gym;
 }

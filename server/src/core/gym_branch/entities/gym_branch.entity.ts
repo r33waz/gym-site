@@ -1,32 +1,31 @@
-import { Column, Entity, ManyToMany, ManyToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+} from 'typeorm';
 import { BaseEntity } from '../../../shared/baseEntity';
 import { Gym } from '../../gym/entities/gym.entity';
+import { Address } from '../../address/entities/address.entity';
+import { GYM_STATUS } from '../../../constant/enum/common.enum';
 
 @Entity('gym_branch')
 export class GymBranch extends BaseEntity {
-  @Column()
-  gymnameEn: string;
   // gym name shown publicly
-
   @Column()
-  gymnameNp: string;
+  branch_name: string;
 
-  @Column()
-  address: string;
-  // full address of gym
+  @OneToOne(() => Address, (address) => address.branch_Address)
+  @JoinColumn()
+  address_details: Address;
 
-  @Column()
-  city: string;
-  // city for filtering/search
+  @Column({ type: 'enum', enum: GYM_STATUS, default: GYM_STATUS?.PENDING })
+  status: GYM_STATUS;
 
-  @Column()
-  phoneNumer: String;
-
-  @Column()
-  telNumber: string;
-
-  @ManyToOne(() => Gym, (gym) => gym.branches, {
-    onDelete: 'CASCADE',
-  })
-  gym: Gym;
+  // one gym can have the multiple branches
+  @ManyToOne(() => Gym, (gym) => gym.gym_branches)
+  gym_head_office: Gym;
 }
