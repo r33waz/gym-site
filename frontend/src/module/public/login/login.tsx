@@ -7,6 +7,7 @@ import type { ILoginInterface } from "@/interface/auth.interface";
 import { loginSchema } from "@/service/auth/auth.schema";
 import { useLogin } from "@/service/auth/auth.service";
 import { Eye, EyeClosed } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -89,9 +90,9 @@ const Login = () => {
 
             {/* Options */}
             <div className="flex justify-end text-sm">
-              <button type="button" className="text-primary hover:underline">
+              <Link to="/"  className="text-primary hover:underline">
                 Forgot password?
-              </button>
+              </Link>
             </div>
 
             {/* Button */}
