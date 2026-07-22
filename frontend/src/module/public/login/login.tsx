@@ -90,7 +90,7 @@ const Login = () => {
 
             {/* Options */}
             <div className="flex justify-end text-sm">
-              <Link to="/"  className="text-primary hover:underline">
+              <Link to="/" className="text-primary hover:underline">
                 Forgot password?
               </Link>
             </div>
