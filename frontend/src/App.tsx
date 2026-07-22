@@ -1,4 +1,4 @@
-import Login from "./module/public/login/login";
+import Login from "@/core/public/auth/login";
 
 function App() {
   return (

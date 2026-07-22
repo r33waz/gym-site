@@ -31,9 +31,9 @@
   },
 "lint-staged": {
 "frontend/**/*.{ts,tsx}": [
-  "eslint --fix",
-  "prettier --write"
-],
+    "npm --prefix frontend run lint:fix",
+    "prettier --write"
+  ],
   "server/**/*.ts": [
     "eslint --fix --max-warnings=0",
     "prettier --write"
