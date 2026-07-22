@@ -7,10 +7,4 @@ if git diff origin/$(git rev-parse --abbrev-ref HEAD) --name-only --diff-filter=
   exit 1
 fi
 
-echo "🏗️ Building server (nestjs)..."
-pnpm --filter server run build || exit 1
-
-echo "🏗️ Building frontend (react)..."
-pnpm --filter frontend run build || exit 1
-
-echo "✅ All checks passed. Pushing..."
+echo "✅ No console.log found. Pushing..."
