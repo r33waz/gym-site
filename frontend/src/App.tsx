@@ -1,4 +1,3 @@
-
 import Login from "./module/public/login/login";
 import useOptions from "./hooks/useOptions";
 
@@ -9,13 +8,10 @@ function App() {
   ];
 
   const options = useOptions(users, "age", "id");
-  console.log("🚀 ~ App ~ options:", options)
-  console.log("🚀 ~ App ~ options:", options)
-  console.log("🚀 ~ App ~ options:", options)
 
   return (
     <>
-      <Login/>
+      <Login />
     </>
   );
 }

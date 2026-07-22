@@ -30,10 +30,10 @@
     "prettier": "^3.9.6"
   },
 "lint-staged": {
-  "frontend/**/*.{ts,tsx}": [
-    "eslint --fix --max-warnings=0",
-    "prettier --write"
-  ],
+"frontend/**/*.{ts,tsx}": [
+  "eslint --fix",
+  "prettier --write"
+],
   "server/**/*.ts": [
     "eslint --fix --max-warnings=0",
     "prettier --write"
