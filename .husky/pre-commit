@@ -1,0 +1,4 @@
+# Runs lint-staged, which only lints/formats the files you actually staged
+# (not the whole repo) — fast, and scoped separately to frontend/ and backend/
+# via the lint-staged config in root package.json
+pnpm exec commitlint --edit "$1"

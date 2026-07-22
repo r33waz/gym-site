@@ -1,0 +1,16 @@
+echo "🔎 Checking for console.log in files about to be pushed..."
+
+if git diff origin/$(git rev-parse --abbrev-ref HEAD) --name-only --diff-filter=ACM \
+  | grep -E '\.(ts|tsx|js|jsx)$' \
+  | xargs grep -nE "console\.(log|debug)" 2>/dev/null; then
+  echo "❌ console.log found above. Remove it before pushing."
+  exit 1
+fi
+
+echo "🏗️ Building server (nestjs)..."
+pnpm --filter server run build || exit 1
+
+echo "🏗️ Building frontend (react)..."
+pnpm --filter frontend run build || exit 1
+
+echo "✅ All checks passed. Pushing..."

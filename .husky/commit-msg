@@ -1,0 +1,4 @@
+# $1 = path to the temp file git creates containing your commit message.
+# commitlint reads it and checks it against commitlint.config.js rules
+# (type, scope, casing, length etc.)
+npx --no -- commitlint --edit "$1"

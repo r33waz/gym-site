@@ -10,6 +10,7 @@ function App() {
 
   const options = useOptions(users, "age", "id");
   console.log("🚀 ~ App ~ options:", options)
+  console.log("🚀 ~ App ~ options:", options)
 
   return (
     <>
