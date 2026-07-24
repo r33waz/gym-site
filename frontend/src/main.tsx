@@ -7,6 +7,7 @@ import "./index.css";
 import { Toaster } from "react-hot-toast";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { BrowserRouter } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext.tsx";
 
 const queryClient = new QueryClient();
 
@@ -15,10 +16,15 @@ createRoot(document.getElementById("root")!).render(
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
-          <App />
+          <AuthProvider>
+            <App />
+          </AuthProvider>
           <Toaster position="top-right" reverseOrder={false} gutter={8} />
         </ThemeProvider>
-        <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
+        <ReactQueryDevtools
+          initialIsOpen={false}
+          buttonPosition="bottom-left"
+        />
       </QueryClientProvider>
     </BrowserRouter>
   </StrictMode>,
