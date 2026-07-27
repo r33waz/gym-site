@@ -5,7 +5,7 @@ import {
   PAYMENT_METHOD,
   PAYMENT_STATUS,
   PAYMENT_TYPE,
-} from '../../../constant/enum';
+} from '../../../constant/enum/common.enum';
 import { Gym } from '../../gym/entities/gym.entity';
 
 @Entity()

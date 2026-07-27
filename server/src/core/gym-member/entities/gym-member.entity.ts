@@ -1,7 +1,7 @@
 import { Entity, Column, ManyToOne, Index, Unique } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
 import { Gym } from '../../gym/entities/gym.entity';
-import { GYM_ROLE } from '../../../constant/enum';
+import { GYM_ROLE } from '../../../constant/enum/common.enum';
 import { BaseEntity } from '../../../shared/baseEntity';
 
 @Entity('gym_members')

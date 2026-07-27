@@ -1,13 +1,19 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ type: 'timestamp with time zone' })
-  created_At?: Date;
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
 
-  @Column({ type: 'timestamp with time zone' })
-  updated_At?: Date;
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
 }

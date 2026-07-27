@@ -5,8 +5,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Button } from "@/components/ui/button";
 import type { ILoginInterface } from "@/interface/auth.interface";
 import { loginSchema } from "@/service/auth/auth.schema";
-import { useLogin } from "@/service/auth/auth.service";
 import { Eye, EyeClosed } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -16,10 +17,10 @@ const Login = () => {
     mode: "onChange",
   });
 
-  const { mutateAsync: uselogin, isPending: submitting } = useLogin();
+  const { login, isLoading } = useAuth();
 
   const onSubmit = (data: ILoginInterface) => {
-    uselogin(data);
+    login(data);
   };
 
   return (
@@ -89,18 +90,19 @@ const Login = () => {
 
             {/* Options */}
             <div className="flex justify-end text-sm">
-              <button type="button" className="text-primary hover:underline">
+              <Link to="/" className="text-primary hover:underline">
                 Forgot password?
-              </button>
+              </Link>
             </div>
 
             {/* Button */}
             <Button
-              disabled={submitting}
+              disabled={isLoading}
+              loading={isLoading}
               type="submit"
               className="w-full py-2.5 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary-hover transition btn-glow "
             >
-              Sign In
+              Log In
             </Button>
           </form>
         </div>

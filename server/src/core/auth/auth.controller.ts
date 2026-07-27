@@ -11,8 +11,9 @@ import {
 import { AuthService } from './auth.service';
 import { ILoginDto } from './dto/create-auth.dto';
 import type { Response } from 'express';
-import { HTTP_CODE } from '../../constant/enum';
+import { HTTP_CODE } from '../../constant/enum/common.enum';
 import { successMessage } from '../../constant/response.message';
+import { ApiResponse } from '../../constant/interface/api.response';
 
 @Controller('auth')
 export class AuthController {
@@ -24,6 +25,8 @@ export class AuthController {
   @Post('login')
   async login(
     @Body() dto: ILoginDto,
+    // here we are usign passthrough to haldel the repsonse logic byth e frame work |
+    //
     @Res({ passthrough: true }) res: Response,
   ) {
     const tokens = await this.authService.login(dto);
@@ -45,7 +48,8 @@ export class AuthController {
 
     return {
       status: HTTP_CODE.SUCCESS,
-      message: successMessage.login,
-    };
+      message: successMessage.auth.login,
+      success: true,
+    } satisfies ApiResponse<null>;
   }
 }

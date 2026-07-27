@@ -1,0 +1,42 @@
+{
+  "name": "gym-site",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky",
+    "lint": "eslint . && prettier --check .",
+    "format": "prettier --write ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/r33waz/gym-site.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/r33waz/gym-site/issues"
+  },
+  
+  "homepage": "https://github.com/r33waz/gym-site#readme",
+  "description": "",
+  "devDependencies": {
+    "@commitlint/cli": "^21.2.1",
+    "@commitlint/config-conventional": "^21.2.0",
+    "eslint": "^9.39.5",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.1.0",
+    "prettier": "^3.9.6"
+  },
+"lint-staged": {
+    "frontend/**/*.{ts,tsx}": [
+      "cmd /c \"npm --prefix frontend run lint:fix || exit /b 0\"",
+      "prettier --write"
+    ],
+    "server/**/*.ts": [
+      "cmd /c \"eslint --fix --max-warnings=0 || exit /b 0\"",
+      "prettier --write"
+    ]
+  }
+}

@@ -1,30 +1,26 @@
-export const PublicRoute = {
-  Login: "/login",
-  Register: "/register",
-};
+import { adminRoutePaths } from "@/core/private/Admin/admin.path";
+import { gymRoutePath } from "@/core/private/Gym/gym.path";
+import { staffRoutePath } from "@/core/private/Staff/staff.path";
+import { memberRoutePath } from "@/core/private/memberShip/memberShip.path";
+import { publicRoutes } from "./public";
 
-export const SuperAdminRoute = {
-  Dashboard: "/superadmin/dashboard",
-  Members: "/superadmin/members",
-  Staff: "/superadmin/staff",
-  Settings: "/superadmin/settings",
-};
+export type RouteType = "private" | "public" | "bypass";
 
-export const AdminRoute = {
-  Dashboard: "/admin/dashboard",
-  Plans: "/admin/plans",
-  Reports: "/admin/reports",
-  Settings: "/admin/settings",
-};
+export const publicRoutePath = {
+  ...publicRoutes,
+} as const;
 
-export const StaffRoute = {
-  Dashboard: "/staff/dashboard",
-  Schedule: "/staff/schedule",
-};
+export const privateRoutePath = {
+  base: "/",
+  ...adminRoutePaths,
+  ...gymRoutePath,
+  ...staffRoutePath,
+  ...memberRoutePath,
+} as const;
 
-export const UserRoute = {
-  Dashboard: "/user/dashboard",
-  Profile: "/user/profile",
-  BookClasses: "/user/book-classes",
-  Payments: "/user/payments",
-};
+export const routePaths = {
+  ...publicRoutePath,
+  ...privateRoutePath,
+} as const;
+
+export type RoutePaths = (typeof routePaths)[keyof typeof routePaths];

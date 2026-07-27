@@ -67,7 +67,7 @@ const toastWrapper = (
   overflow: "hidden",
   fontFamily:
     "'DM Sans', 'Instrument Sans', -apple-system, BlinkMacSystemFont, sans-serif",
-  boxSizing: "border-box" as "border-box",
+  boxSizing: "border-box" as const,
 });
 
 const iconWrapper = (bgColor: string): React.CSSProperties => ({
