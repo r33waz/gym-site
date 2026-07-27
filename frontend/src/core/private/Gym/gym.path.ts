@@ -1,1 +1,3 @@
-export const gymPath = {};
+export const gymRoutePath = {
+  gymDashboard: "/dashboard",
+};

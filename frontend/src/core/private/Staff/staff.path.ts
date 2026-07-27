@@ -1,1 +1,3 @@
-export const staffPath = {};
+export const staffRoutePath = {
+  staffDashboard: "/dashboard",
+};

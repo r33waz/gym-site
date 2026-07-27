@@ -17,7 +17,7 @@ const Login = () => {
     mode: "onChange",
   });
 
-  const { login, isLoading, userInfo } = useAuth();
+  const { login, isLoading } = useAuth();
 
   const onSubmit = (data: ILoginInterface) => {
     login(data);

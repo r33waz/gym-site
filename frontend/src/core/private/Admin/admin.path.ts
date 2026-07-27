@@ -1,1 +1,3 @@
-export const adminPaths = {};
+export const adminRoutePaths = {
+  adminDashboard: "/dashboard",
+};
