@@ -7,5 +7,4 @@ export const privateRoutes: AppRouteObject[] = [
   ...adminRoutes,
   ...gymRoutes,
   ...staffRoutes,
-  //   ...userRoutes,
 ];
