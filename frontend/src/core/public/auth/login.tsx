@@ -8,6 +8,9 @@ import { loginSchema } from "@/service/auth/auth.schema";
 import { Eye, EyeClosed } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
+import { useTranslation } from "react-i18next";
+import LanguageTrans from "@/components/common/LanguageTrans";
+import { getTextByLanguage } from "@/i18n/i18n";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -17,6 +20,8 @@ const Login = () => {
     mode: "onChange",
   });
 
+  const { t } = useTranslation();
+
   const { login, isLoading } = useAuth();
 
   const onSubmit = (data: ILoginInterface) => {
@@ -25,29 +30,58 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
-      {/* Container */}
       <div className="w-full max-w-5xl grid md:grid-cols-2 rounded-2xl overflow-hidden shadow-xl border border-border">
-        {/* LEFT SIDE - Branding */}
         <div className="hidden md:flex flex-col justify-center p-10 gradient-primary text-white">
-          <h1 className="text-4xl font-bold mb-4">Welcome Back 💪</h1>
+          <h1 className="text-4xl font-bold mb-4">
+            {getTextByLanguage("Welcome Back 💪", "फेरि स्वागत छ 💪")}
+          </h1>
           <p className="text-lg text-white/80">
-            Track your workouts, manage memberships, and stay consistent.
+            {getTextByLanguage(
+              "Track your workouts, manage memberships, and stay consistent.",
+              "आफ्नो अभ्यास ट्र्याक गर्नुहोस्, सदस्यता व्यवस्थापन गर्नुहोस्, र निरन्तर रहनुहोस्।",
+            )}
           </p>
 
           <div className="mt-10 space-y-3 text-sm text-white/80">
-            <p>✔ Manage Members</p>
-            <p>✔ Track Attendance</p>
-            <p>✔ Monitor Payments</p>
+            <p>
+              ✔{" "}
+              {getTextByLanguage(
+                "Manage Members",
+                "सदस्यहरू व्यवस्थापन गर्नुहोस्",
+              )}
+            </p>
+            <p>
+              ✔{" "}
+              {getTextByLanguage(
+                "Track Attendance",
+                "उपस्थिति ट्र्याक गर्नुहोस्",
+              )}
+            </p>
+            <p>
+              ✔{" "}
+              {getTextByLanguage(
+                "Monitor Payments",
+                "भुक्तानी अनुगमन गर्नुहोस्",
+              )}
+            </p>
           </div>
         </div>
 
-        {/* RIGHT SIDE - FORM */}
         <div className="bg-card p-6 sm:p-10 flex flex-col justify-center">
-          <h2 className="text-2xl font-semibold mb-2 text-foreground">
-            Login to your account
-          </h2>
+          <div className="flex justify-between">
+            <h2 className="text-2xl font-semibold mb-2 text-foreground">
+              {getTextByLanguage(
+                "Login to your account",
+                "आफ्नो खातामा लगइन गर्नुहोस्",
+              )}
+            </h2>
+            <LanguageTrans />
+          </div>
           <p className="text-sm text-muted-foreground mb-6">
-            Enter your credentials to continue
+            {getTextByLanguage(
+              "Enter your credentials to continue",
+              "जारी राख्न आफ्नो प्रमाणहरू प्रविष्ट गर्नुहोस्",
+            )}
           </p>
 
           <form
@@ -55,13 +89,15 @@ const Login = () => {
             onSubmit={handleSubmit(onSubmit)}
             className="space-y-5"
           >
-            {/* Email */}
             <div>
               <GenericInput
                 type="email"
-                label="Email or Username"
+                label={t("auth:login.email")}
                 name="email"
-                placeholder="Enter your email or username"
+                placeholder={getTextByLanguage(
+                  "Enter your email or username",
+                  "आफ्नो इमेल वा प्रयोगकर्ता नाम प्रविष्ट गर्नुहोस्",
+                )}
                 isRequired
                 control={control}
                 className="w-full mt-1 px-4 py-2 rounded-lg bg-input-bg border border-border focus:ring-2 focus:ring-primary outline-none"
@@ -71,9 +107,12 @@ const Login = () => {
             {/* Password */}
             <div className="relative">
               <GenericInput
-                label="Password"
+                label={t("auth:login.password")}
                 type={showPassword ? "text" : "password"}
-                placeholder="Enter your password"
+                placeholder={getTextByLanguage(
+                  "Enter your password",
+                  "आफ्नो पासवर्ड प्रविष्ट गर्नुहोस्",
+                )}
                 name="password"
                 isRequired
                 control={control}
@@ -91,7 +130,7 @@ const Login = () => {
             {/* Options */}
             <div className="flex justify-end text-sm">
               <Link to="/" className="text-primary hover:underline">
-                Forgot password?
+                {getTextByLanguage("Forgot password?", "पासवर्ड बिर्सनुभयो?")}
               </Link>
             </div>
 
@@ -102,7 +141,7 @@ const Login = () => {
               type="submit"
               className="w-full py-2.5 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary-hover transition btn-glow "
             >
-              Log In
+              {getTextByLanguage("Log In", "लगइन")}
             </Button>
           </form>
         </div>

@@ -1,10 +1,9 @@
 import axios, {
-  AxiosError,
-  type AxiosInstance,
-  type AxiosResponse,
-  type InternalAxiosRequestConfig,
-} from "axios";
-// Import Axios library for making HTTP requests
+  AxiosError, // Type for errors thrown by Axios
+  type AxiosInstance, // Type for the Axios instance object
+  type AxiosResponse, // Type for successful HTTP responses
+  type InternalAxiosRequestConfig, // Type for request config inside interceptors
+} from "axios"; // Import Axios library for making HTTP requests
 
 export const apiInstance: AxiosInstance = axios.create({
   // Base URL for all API requests (comes from environment variables)
@@ -25,7 +24,7 @@ export const apiInstance: AxiosInstance = axios.create({
 apiInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     // Retrieve language preference from localStorage
-    const lang = localStorage.getItem("lang") || "en";
+    const lang = localStorage.getItem("lang") || "en"; // Fall back to "en" if no lang is stored
 
     // Ensure headers object exists (safe assignment)
     config.headers = config.headers ?? {};
@@ -53,21 +52,21 @@ apiInstance.interceptors.response.use(
   },
 
   (error: AxiosError) => {
-    console.log("🚀 ~ error:", error);
-    // Check if server responded with 403 Unauthorized
+    console.log("🚀 ~ error:", error); // Log the raw error for debugging
+    // Check if server responded with 403 Forbidden
     if (error.response?.status === 403) {
       // ⚠️ IMPORTANT:
       // force browser navigation to login page
-
-      window.location.replace("/login");
+      window.location.replace("/login"); // Hard redirect to login on forbidden response
     }
 
+    // Extract backend error message if available, otherwise use Axios default message
     const customError = (error.response?.data as any)?.message || error.message;
 
     // 3. Create a new Error object or modify the existing one
     // This ensures that 'err.message' in TanStack Query is actually your backend message.
-    error.message = customError;
+    error.message = customError; // Override Axios error message with backend message
 
-    return Promise.reject(error);
+    return Promise.reject(error); // Propagate the modified error to the caller
   },
 );
