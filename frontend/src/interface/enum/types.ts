@@ -3,7 +3,7 @@ import type React from "react";
 import type { RouteObject } from "react-router-dom";
 import { ROLEENUM } from "@/interface/enum/role.enum";
 
-export type RouteType = "private" | "public" | "bypass";
+export type RouteType = "private" | "public" | "bypass" | "auth"; // "auth" = login/signup pages that skip the header
 
 export type _RouteObject<Type extends RouteType = "private"> = RouteObject & {
   type?: Type;

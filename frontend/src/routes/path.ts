@@ -3,7 +3,7 @@ import { gymRoutePath } from "@/core/private/Gym/gym.path"; // Path constants fo
 import { staffRoutePath } from "@/core/private/Staff/staff.path"; // Path constants for staff section routes
 import { memberRoutePath } from "@/core/private/memberShip/memberShip.path"; // Path constants for membership routes
 
-export type RouteType = "private" | "public" | "bypass"; // Union type defining the access level of a route
+export type RouteType = "private" | "public" | "bypass" | "auth"; // "auth" = login/signup pages that skip the header
 
 export const privateRoutePath = {
   base: "/", // Base path for the private app shell
@@ -13,8 +13,14 @@ export const privateRoutePath = {
   ...memberRoutePath, // Merge all membership route path constants
 } as const; // Freeze the object so paths are inferred as literal types
 
+export const publicRoutePath = {
+  login: "/login", // Login page path
+  signup: "/signup", // Signup page path
+} as const;
+
 export const routePaths = {
   ...privateRoutePath, // Expose all private paths under a single routePaths object
+  ...publicRoutePath,
 } as const;
 
 export type RoutePaths = (typeof routePaths)[keyof typeof routePaths]; // Union type of all valid route path strings

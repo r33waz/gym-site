@@ -42,8 +42,8 @@ export function createRoute(args: AppRoute): AppRouteObject {
     ...rest, // Spread remaining fields (path, title, icon, etc.) onto the route object
     roles, // Attach roles for reference in nav/sidebar rendering
     element:
-      type && ["public", "bypass"].includes(type) ? (
-        <RouteWrapper>{React.createElement(element)}</RouteWrapper> // Public/bypass routes: wrap directly without permission check
+      type && ["public", "bypass", "auth"].includes(type) ? (
+        <RouteWrapper>{React.createElement(element)}</RouteWrapper> // Public/bypass/auth routes: wrap directly without permission check
       ) : (
         <Permission RElement={element} roles={roles} /> // Private routes: gate behind role-based Permission component
       ),
