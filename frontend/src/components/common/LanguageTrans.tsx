@@ -35,9 +35,8 @@ const LanguageTrans = () => {
           size="icon"
           className={cn(
             "relative gap-1 border-2 border-primary/30 font-semibold",
-            "hover:border-primary hover:bg-primary/5 hover:text-primary",
             "dark:border-white/30 dark:hover:border-white dark:hover:bg-white/10",
-            "transition-all duration-300",
+            " duration-300",
           )}
         >
           <span className="text-xs">{currentShort}</span>
