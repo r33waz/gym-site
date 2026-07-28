@@ -3,8 +3,11 @@ import { LogIn, UserPlus } from "lucide-react";
 import { Button } from "../ui/button";
 import { privateRoutePath, publicRoutePath } from "@/routes/path";
 import Logo from "@/assets/Images/Gemini_Generated_Image_elp71melp71melp7.png";
+import LanguageTrans from "../common/LanguageTrans";
+import { useTranslation } from "react-i18next";
 
 const DesktopHeader = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   return (
@@ -13,6 +16,8 @@ const DesktopHeader = () => {
         <img src={Logo} alt="Logo" className="w-12 h-10" />
       </Link>
       <div className="flex items-center gap-2">
+        <LanguageTrans />
+
         <Button
           variant="outline"
           onClick={() => navigate(publicRoutePath.login)}
@@ -25,7 +30,7 @@ const DesktopHeader = () => {
           `}
         >
           <LogIn className="size-4" />
-          Log In
+          {t("btns.login")}
         </Button>
 
         <Button
@@ -46,7 +51,7 @@ const DesktopHeader = () => {
   `}
         >
           <UserPlus className="size-4" />
-          Sign Up
+          {t("btns.signup")}
         </Button>
       </div>
     </div>
