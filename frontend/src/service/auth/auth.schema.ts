@@ -4,15 +4,23 @@ export const loginSchema = yup.object().shape({
   // Define validation schema for the login form
   email: yup
     .string() // Must be a string value
-    .required("Email or username is required") // Field cannot be empty
-    .test("email-or-username", "Enter a valid email or username", (value) => {
-      if (!value) return false; // Fail validation if value is empty or undefined
+    .required("auth:form.emailOrUsernamerequired"), // Field cannot be empty
 
-      const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i; // Regex pattern to validate standard email format
+  password: yup.string().required("auth:form.passwordRequired"), // Password must be a non-empty string
+});
 
-      const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/; // Regex pattern to validate alphanumeric username (3–20 chars)
-
-      return emailRegex.test(value) || usernameRegex.test(value); // Pass if value matches either email or username format
-    }),
-  password: yup.string().required("Password is required"), // Password must be a non-empty string
+export const registerSchema = yup.object().shape({
+  email: yup
+    .string()
+    .email("auth:form.validEmail")
+    .required("auth:form.emailrequired"), // Email must be a non-empty string
+  username: yup
+    .string()
+    .required("auth:form.usernameRequired")
+    .matches(/^[A-Za-z]+$/, "auth:form.validUsername"), // Password must be a non-empty string
+  password: yup.string().required("auth:form.passwordRequired"), // Password must be a non-empty string
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref("password"), undefined], "auth:form.matchPassword")
+    .required("auth:form.confirmPasswordRequired"), // Password must be a non-empty string
 });
