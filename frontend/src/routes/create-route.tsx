@@ -3,7 +3,6 @@ import { ROLEENUM } from "@/interface/enum/role.enum"; // Enum of all user roles
 import PageNotFound from "@/core/public/components/pageNotFound"; // Shown when user lacks role access
 import { useAuth } from "@/context/AuthContext"; // Hook to read auth state and current user info
 import type { AppRoute, AppRouteObject } from "@/interface/enum/types"; // Input and output types for route creation
-import RouteWrapper from "@/context/RouteWrapper"; // Wraps elements with context/auth providers
 import ErrorBoundary from "@/core/public/components/ErrorBoundry"; // Catches errors thrown during route rendering
 
 interface IPermissionProps {
@@ -27,11 +26,9 @@ export const Permission = (props: IPermissionProps) => {
   }
 
   return (
-    <RouteWrapper>
-      {" "}
-      {/* Wrap the authorized component with context providers */}
+    <>
       <RElement /> {/* Render the protected route component */}
-    </RouteWrapper>
+    </>
   );
 };
 
@@ -43,7 +40,7 @@ export function createRoute(args: AppRoute): AppRouteObject {
     roles, // Attach roles for reference in nav/sidebar rendering
     element:
       type && ["public", "bypass", "auth"].includes(type) ? (
-        <RouteWrapper>{React.createElement(element)}</RouteWrapper> // Public/bypass/auth routes: wrap directly without permission check
+        <>{React.createElement(element)}</> // Public/bypass/auth routes: wrap directly without permission check
       ) : (
         <Permission RElement={element} roles={roles} /> // Private routes: gate behind role-based Permission component
       ),

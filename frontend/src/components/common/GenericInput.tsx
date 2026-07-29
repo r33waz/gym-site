@@ -3,6 +3,7 @@ import type { InputProps } from "@/interface/ui.interface";
 import { useEffect, useRef, useState } from "react";
 import { Controller } from "react-hook-form";
 import { Input } from "../ui/input";
+import { useTranslation } from "react-i18next";
 
 const GenericInput = (props: InputProps) => {
   const {
@@ -22,6 +23,8 @@ const GenericInput = (props: InputProps) => {
   // ── Uncontrolled (no RHF) with optional debounce ──────────────────────────
   const [localValue, setLocalValue] = useState<string | number>(value ?? "");
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     setLocalValue(value ?? "");
@@ -111,7 +114,7 @@ const GenericInput = (props: InputProps) => {
             />
             {fieldState.error && (
               <p className="mt-1 text-sm text-destructive">
-                {fieldState.error.message}
+                {t(fieldState?.error?.message ?? "")}
               </p>
             )}
           </div>

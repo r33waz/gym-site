@@ -12,7 +12,7 @@ import React from "react";
 
 const LANGUAGES = [
   { code: "en", label: "English", short: "EN" },
-  { code: "ne", label: "नेपाली", short: "ने" },
+  { code: "ne", label: "नेपाली", short: "नेप" },
 ] as const;
 
 const LanguageTrans = () => {

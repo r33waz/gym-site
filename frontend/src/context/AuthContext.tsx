@@ -19,7 +19,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (payload: ILoginInterface) => {
     const res = await loginMutation.mutateAsync(payload);
 
-    setUserInfo(res.data.user);
+    setUserInfo(res?.data);
 
     return res;
   };

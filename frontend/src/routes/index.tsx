@@ -1,6 +1,5 @@
 // routes/index.tsx - Root router configuration for the entire application
 import React from "react"; // Required for JSX and lazy loading
-import RouteWrapper from "@/context/RouteWrapper"; // Wraps routes with auth/context providers
 import ErrorBoundary from "@/core/public/components/ErrorBoundry"; // Catches and displays route-level errors
 import { createBrowserRouter, type RouteObject } from "react-router-dom"; // Browser history router factory and route type
 import { privateRoutes } from "./private"; // Aggregated protected routes (admin, gym, staff)
@@ -19,10 +18,10 @@ export const router = createBrowserRouter([
   {
     path: "/", // Root path — entry point of the app
     element: (
-      <RouteWrapper>
+      <>
         {/* Provide context/auth wrapping for the root layout */}
         <Root /> {/* Private app shell that renders nested child routes */}
-      </RouteWrapper>
+      </>
     ),
     errorElement: <ErrorBoundary />, // Render error boundary if this route or its children throw
     children: [
@@ -43,10 +42,10 @@ export const router = createBrowserRouter([
   {
     path: "*", // Catch-all for any unmatched URL
     element: (
-      <RouteWrapper>
+      <>
         {/* Wrap 404 page with context providers */}
         <PageNotFound /> {/* Display 404 not found UI */}
-      </RouteWrapper>
+      </>
     ),
     errorElement: <ErrorBoundary />, // Handle errors thrown within the 404 route
   },

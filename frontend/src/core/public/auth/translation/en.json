@@ -1,0 +1,22 @@
+{
+  "login": {
+    "email": "Email or Username",
+    "password": "Password"
+  },
+  "signup": {
+    "username": "Username",
+    "email": "Email ",
+    "password": "Password",
+    "confirmPassword": "Confirm Password"
+  },
+  "form":{
+    "validEmail":"Enter a valid email",
+    "validUsername":"Username must only contain letters (no numbers or special characters)",
+    "emailrequired":"Email is required",
+    "emailOrUsernamerequired":"Email or Username is required",
+    "usernameRequired":"Username is required",
+    "passwordRequired":"Password is required",
+    "confirmPasswordRequired":"Confirm Password is required",
+    "matchPassword":"Password does not match"
+  }
+}
