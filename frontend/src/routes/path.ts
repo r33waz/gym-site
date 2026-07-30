@@ -1,7 +1,7 @@
 import { adminRoutePaths } from "@/core/private/Admin/admin.path"; // Path constants for admin section routes
 import { gymRoutePath } from "@/core/private/Gym/gym.path"; // Path constants for gym management routes
 import { staffRoutePath } from "@/core/private/Staff/staff.path"; // Path constants for staff section routes
-import { memberRoutePath } from "@/core/private/memberShip/memberShip.path"; // Path constants for membership routes
+import { memberRoutePath } from "@/core/private/MemberShips/memberShip.path"; // Path constants for membership routes
 
 export type RouteType = "private" | "public" | "bypass" | "auth"; // "auth" = login/signup pages that skip the header
 
