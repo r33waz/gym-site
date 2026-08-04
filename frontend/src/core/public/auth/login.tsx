@@ -11,9 +11,13 @@ import { useAuth } from "@/context/AuthContext";
 import { useTranslation } from "react-i18next";
 import LanguageTrans from "@/components/common/LanguageTrans";
 import { getTextByLanguage } from "@/i18n/i18n";
+import useToggle from "@/hooks/useToggle";
+import ConfirmationModal from "@/components/common/ConformationModal";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [isOpenModal, setOpenModal] = useToggle();
+  console.log("🚀 ~ Login ~ isOpenModal:", isOpenModal);
 
   const { control, handleSubmit } = useForm<ILoginInterface>({
     resolver: yupResolver(loginSchema),
@@ -27,6 +31,8 @@ const Login = () => {
   const onSubmit = (data: ILoginInterface) => {
     login(data);
   };
+
+  const handleDelete = () => {};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
@@ -138,6 +144,7 @@ const Login = () => {
             <Button
               disabled={isLoading}
               loading={isLoading}
+
               type="submit"
               className="w-full py-2.5 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary-hover transition btn-glow "
             >
@@ -145,7 +152,23 @@ const Login = () => {
             </Button>
           </form>
         </div>
+        <Button
+          disabled={isLoading}
+          loading={isLoading}
+          onClick={() => {
+            setOpenModal(true);
+          }}
+          className="w-full py-2.5 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary-hover transition btn-glow "
+        >
+          {getTextByLanguage("Log In", "लगइन")}
+        </Button>
       </div>
+      <ConfirmationModal
+        isOpen={isOpenModal}
+        onClose={setOpenModal}
+        onConfirm={handleDelete}
+        variant="success"
+      />
     </div>
   );
 };

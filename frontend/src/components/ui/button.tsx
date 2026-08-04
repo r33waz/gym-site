@@ -46,6 +46,8 @@ export interface ButtonProps
   asChild?: boolean;
   loading?: boolean;
   loadingText?: string;
+  leftIcone?: React.ReactNode;
+  rightIcone?: React.ReactNode;
 }
 
 function Button({
@@ -57,6 +59,8 @@ function Button({
   loadingText,
   children,
   disabled,
+  leftIcone,
+  rightIcone,
   ...props
 }: ButtonProps) {
   const Comp = asChild ? Slot.Root : "button";
@@ -70,11 +74,13 @@ function Button({
       disabled={loading || disabled}
       {...props}
     >
+      {leftIcone ? leftIcone : null}
       {loading ? (
         <>{loading ? <Spinner /> : (loadingText ?? children)}</>
       ) : (
         children
       )}
+      {rightIcone ? rightIcone : null}
     </Comp>
   );
 }
