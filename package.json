@@ -30,13 +30,13 @@
     "prettier": "^3.9.6"
   },
 "lint-staged": {
-    "frontend/**/*.{ts,tsx}": [
-      "cmd /c \"npm --prefix frontend run lint:fix || exit /b 0\"",
-      "prettier --write"
-    ],
-    "server/**/*.ts": [
-      "cmd /c \"eslint --fix --max-warnings=0 || exit /b 0\"",
-      "prettier --write"
-    ]
-  }
+  "frontend/**/*.{ts,tsx}": [
+    "pnpm --filter frontend run lint:fix",
+    "prettier --write"
+  ],
+  "server/**/*.ts": [
+    "eslint --fix --max-warnings=0",
+    "prettier --write"
+  ]
+}
 }
