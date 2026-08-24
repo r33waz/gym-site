@@ -1,55 +1,34 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Res,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ILoginDto } from './dto/create-auth.dto';
-import type { Response } from 'express';
-import { HTTP_CODE } from '../../constant/enum/common.enum';
-import { successMessage } from '../../constant/response.message';
-import { ApiResponse } from '../../constant/interface/api.response';
+import { CreateAuthDto } from './dto/create-auth.dto';
+import { UpdateAuthDto } from './dto/update-auth.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  private readonly ACCESS_MAX_AGE = 15 * 60 * 1000;
-  private readonly REFRESH_MAX_AGE = 7 * 24 * 60 * 60 * 1000;
+  @Post()
+  create(@Body() createAuthDto: CreateAuthDto) {
+    return this.authService.create(createAuthDto);
+  }
 
-  @Post('login')
-  async login(
-    @Body() dto: ILoginDto,
-    // here we are usign passthrough to haldel the repsonse logic byth e frame work |
-    //
-    @Res({ passthrough: true }) res: Response,
-  ) {
-    const tokens = await this.authService.login(dto);
+  @Get()
+  findAll() {
+    return this.authService.findAll();
+  }
 
-    //  this is for the validation for the cookies  in the browser
-    res.cookie('access_token', tokens.accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: this.ACCESS_MAX_AGE,
-    });
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.authService.findOne(+id);
+  }
 
-    res.cookie('refresh_token', tokens.refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: this.REFRESH_MAX_AGE,
-    });
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
+    return this.authService.update(+id, updateAuthDto);
+  }
 
-    return {
-      status: HTTP_CODE.SUCCESS,
-      message: successMessage.auth.login,
-      success: true,
-    } satisfies ApiResponse<null>;
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.authService.remove(+id);
   }
 }

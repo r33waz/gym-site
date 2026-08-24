@@ -1,70 +1,26 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { ILoginDto } from './dto/create-auth.dto';
-import { JwtService } from '@nestjs/jwt';
-import { errorMessage } from '../../constant/response.message';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Auth } from './entities/auth.entity';
-import { comparePassword } from '../../utils/password.utils';
+import { Injectable } from '@nestjs/common';
+import { CreateAuthDto } from './dto/create-auth.dto';
+import { UpdateAuthDto } from './dto/update-auth.dto';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private jwtService: JwtService,
-    @InjectRepository(Auth)
-    private authRepo: Repository<Auth>,
-  ) {}
+  create(createAuthDto: CreateAuthDto) {
+    return 'This action adds a new auth';
+  }
 
-  private readonly ACCESS_EXPIRES = '15m';
-  private readonly REFRESH_EXPIRES = '7d';
+  findAll() {
+    return `This action returns all auth`;
+  }
 
-  async login(loginDto: ILoginDto) {
-    const { email, password } = loginDto;
+  findOne(id: number) {
+    return `This action returns a #${id} auth`;
+  }
 
-    // 1. Fixed the 'user' reserved keyword by using 'u' alias
-    // 2. Used leftJoinAndSelect to automatically handle the mapping safely
-    const identifier = email;
+  update(id: number, updateAuthDto: UpdateAuthDto) {
+    return `This action updates a #${id} auth`;
+  }
 
-    const authAccount = await this.authRepo
-      .createQueryBuilder('auth')
-      .leftJoinAndSelect('auth.user', 'u')
-      .where('auth.email = :identifier', { identifier })
-      .orWhere('u.username = :identifier', { identifier })
-      .getOne();
-
-    if (!authAccount) {
-      throw new UnauthorizedException(errorMessage?.auth.invalidCredentials);
-    }
-
-    // 3. Compare password
-    const matchedPassword = await comparePassword(
-      password,
-      authAccount.password,
-    );
-    if (!matchedPassword) {
-      throw new UnauthorizedException(errorMessage?.auth.invalidCredentials);
-    }
-
-    // 4. SECURITY FIX: Prepare a clean payload.
-    // NEVER put the whole 'user' object (password hash) in a JWT.
-    const payload = {
-      sub: authAccount.id,
-      email: authAccount.email,
-      role: authAccount?.user?.memberships,
-    };
-
-    const accessToken = this.jwtService.sign(payload, {
-      secret: process.env.ACCESS_SECRET_KEY,
-      expiresIn: this.ACCESS_EXPIRES,
-    });
-
-    const refreshToken = this.jwtService.sign(payload, {
-      secret: process.env.REFRESH_SECRET_KEY,
-      expiresIn: this.REFRESH_EXPIRES,
-    });
-
-    
-
-    return { accessToken, refreshToken };
+  remove(id: number) {
+    return `This action removes a #${id} auth`;
   }
 }

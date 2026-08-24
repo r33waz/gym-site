@@ -125,7 +125,7 @@ export function DynamicForm<T extends FieldValues>({
           {onCancel && (
             <Button
               type="button"
-              variant="outline"
+              variant="secondary"
               onClick={onCancel}
               disabled={loading}
               className="px-5"

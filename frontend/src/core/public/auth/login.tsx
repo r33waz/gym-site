@@ -12,12 +12,10 @@ import { loginSchema } from "@/service/auth/auth.schema";
 import type { ILoginInterface } from "@/interface/auth.interface";
 import type { FieldConfig } from "@/components/form/types";
 import { DynamicForm } from "@/components/form/DynamicForm";
-import useToggle from "@/hooks/useToggle";
 
 const Login = () => {
   const { t } = useTranslation();
   const { login, isLoading } = useAuth();
-  const { isOpen, setIsOpen } = useToggle();
 
   const fields: FieldConfig[] = useMemo(
     () => [
