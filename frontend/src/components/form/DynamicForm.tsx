@@ -136,7 +136,7 @@ export function DynamicForm<T extends FieldValues>({
 
           <Button
             type="submit"
-            className={cn("px-5", btnclass)}
+            className={cn("px-5 w-full", btnclass)}
             loading={loading}
             variant={btnVariant}
           >

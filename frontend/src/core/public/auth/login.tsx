@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
@@ -12,10 +12,57 @@ import { loginSchema } from "@/service/auth/auth.schema";
 import type { ILoginInterface } from "@/interface/auth.interface";
 import type { FieldConfig } from "@/components/form/types";
 import { DynamicForm } from "@/components/form/DynamicForm";
+import { createColumnHelper, type ColumnDef } from "@tanstack/react-table";
+import type { DataTableFeatures } from "@/components/Table/dataTbaleFeature";
+import { DataTable } from "@/components/Table/DataTable";
+import { SortAsc, SortAscIcon } from "lucide-react";
+
+interface Post {
+  id: number;
+  userId: number;
+  title: string;
+  body: string;
+}
 
 const Login = () => {
   const { t } = useTranslation();
   const { login, isLoading } = useAuth();
+
+  const [data, setData] = useState<Post[]>([]);
+
+  const [pageNumber, setPageNumber] = useState(1);
+
+  const [pageSize, setPageSize] = useState(10);
+
+  const [totalRecords, setTotalRecords] = useState(0);
+
+  const [totalPages, setTotalPages] = useState(0);
+
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        setLoading(true);
+
+        const response = await fetch(
+          `https://jsonplaceholder.typicode.com/posts?_page=${pageNumber}&_limit=${pageSize}`,
+        );
+
+        const result: Post[] = await response.json();
+
+        setData([]);
+
+        setTotalRecords(result?.length);
+
+        setTotalPages(Math.ceil(100 / pageSize));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPosts();
+  }, [pageNumber, pageSize]);
 
   const fields: FieldConfig[] = useMemo(
     () => [
@@ -48,6 +95,26 @@ const Login = () => {
   const onSubmit = (data: ILoginInterface) => {
     login(data);
   };
+
+  const columnHelper = createColumnHelper<DataTableFeatures, Post>();
+
+  const columns = columnHelper.columns([
+    columnHelper.accessor("userId", {
+      header: "User ID",
+    }),
+
+    columnHelper.accessor("title", {
+      header: "Title",
+      cell: ({ getValue }) => <span className="font-medium">{getValue()}</span>,
+    }),
+
+    columnHelper.accessor("body", {
+      header: "Description",
+      cell: ({ getValue }) => (
+        <span className="line-clamp-2 text-muted-foreground">{getValue()}</span>
+      ),
+    }),
+  ]);
 
   return (
     // fixed + inset-0 pulls this page fully out of normal document flow —
@@ -90,6 +157,22 @@ const Login = () => {
           </p>
         </div>
       </div>
+      <div>
+        <DataTable
+          columns={columns}
+          data={data}
+          serverTable={true}
+          pageNumber={pageNumber}
+          pageSize={pageSize}
+          totalRecords={totalRecords}
+          totalPages={totalPages}
+          onPageChange={setPageNumber}
+          onPageSizeChange={(size) => {
+            setPageSize(size);
+            setPageNumber(1);
+          }}
+        />
+      </div>
 
       <div className="flex flex-col justify-center p-6 sm:p-10 lg:p-16 overflow-y-auto">
         <div className="w-full max-w-md mx-auto">
@@ -118,7 +201,6 @@ const Login = () => {
               onSubmit={onSubmit}
               submitButtonText={getTextByLanguage("Log In", "लगइन")}
               loading={isLoading}
-              btnclass="w-full"
             />
           </div>
 

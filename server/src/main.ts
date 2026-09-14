@@ -2,7 +2,6 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import cookieParser from 'cookie-parser';
 import { ValidationPipe } from '@nestjs/common';
-import { ValidationExceptionFilter } from './utils/custmeValidation';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,7 +15,6 @@ async function bootstrap() {
     }),
   );
 
-  app.useGlobalFilters(new ValidationExceptionFilter());
 
   // Logic to handle potential undefined or multiple origins
   const origin = process.env.FORNTEND_URL;
