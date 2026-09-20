@@ -1,7 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  ParseIntPipe,
+  ParseUUIDPipe,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { AgevalidatorpipePipe } from '../../pipes/agevalidatorpipe.pipe';
 
 @Controller('user')
 export class UserController {
@@ -16,14 +28,14 @@ export class UserController {
   // findAll() {
   //   return this.userService.findAll();
   // }
-  @Get('/all')
+  @Get('all')
   getUser() {
     return this.userService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+  findOne(@Param('id', AgevalidatorpipePipe) id: number) {
+    return this.userService.findOne(id);
   }
 
   @Patch(':id')

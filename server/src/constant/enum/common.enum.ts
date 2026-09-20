@@ -1,157 +1,242 @@
-export enum HTTP_CODE {
-  SUCCESS = 200,
-  BAD_REQUEST = 400,
-  UNAUTHORIZED = 401,
-  FORBIDDEN = 403,
-  NOT_FOUND = 404,
-  SERVER_ERROR = 500,
+/**
+ * ============================================================================
+ * ALL ENUMS — Field Service SaaS
+ * ============================================================================
+ * Single source of truth for every enum in the system.
+ *
+ * Naming convention:
+ *   • TypeScript keys  : SCREAMING_SNAKE_CASE
+ *   • String values    : lowercase_snake_case (matches PostgreSQL enums)
+ *
+ * Every enum here maps 1:1 to a PostgreSQL enum type.
+ * The `enumName` + `schema` used in TypeORM entities MUST match exactly.
+ * ============================================================================
+ */
+
+// ============================================================================
+// AUTH SCHEMA
+// ============================================================================
+
+/**
+ * Lifecycle of a user account (login identity).
+ * PostgreSQL: auth.user_status
+ */
+export enum UserStatus {
+  PENDING = 'pending', // awaiting email/phone verification
+  ACTIVE = 'active', // fully usable
+  INACTIVE = 'inactive', // dormant or self-deactivated
+  SUSPENDED = 'suspended', // blocked by admin
 }
 
-export enum STATUS {
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
+// ============================================================================
+// APP SCHEMA — Company & People
+// ============================================================================
+
+/**
+ * Lifecycle of a service company on the SaaS platform.
+ * PostgreSQL: app.company_status
+ */
+export enum CompanyStatus {
+  TRIAL = 'trial', // free trial
+  ACTIVE = 'active', // paying customer
+  SUSPENDED = 'suspended', // blocked, usually non-payment
+  CANCELLED = 'cancelled', // no longer using the platform
 }
 
-export enum GENDER {
-  MALE = 'MALE',
-  FEMALE = 'FEMALE',
-  OTHER = 'OTHER',
+/**
+ * Lifecycle of an employee profile inside a company.
+ * PostgreSQL: app.employee_status
+ */
+export enum EmployeeStatus {
+  ACTIVE = 'active', // working, can receive jobs
+  ON_LEAVE = 'on_leave', // temporary leave, no jobs
+  INACTIVE = 'inactive', // not working but not terminated
+  TERMINATED = 'terminated', // employment ended
 }
 
-export enum GYM_ROLE {
-  OWNER = 'OWNER',
-  ADMIN = 'ADMIN',
-  MANAGER = 'MANAGER',
-  TRAINER = 'TRAINER',
-  MEMBER = 'MEMBER',
+// ============================================================================
+// APP SCHEMA — Bookings & Jobs
+// ============================================================================
+
+/**
+ * Customer-side appointment (pre-work) state.
+ * PostgreSQL: app.booking_status
+ */
+export enum BookingStatus {
+  REQUESTED = 'requested', // asked for service
+  QUOTED = 'quoted', // waiting for quote acceptance
+  SCHEDULED = 'scheduled', // confirmed date/time
+  COMPLETED = 'completed', // work done
+  CANCELLED = 'cancelled', // cancelled by either party
+  NO_SHOW = 'no_show', // customer absent on arrival
 }
 
-export enum SYSTEM_ROLE {
-  SUPER_ADMIN = 'SUPER_ADMIN',
-  GYM_OWNER = 'GYM_OWNER',
-  MANAGER = 'MANAGER',
-  TRAINER = 'TRAINER',
-  STAFF = 'STAFF',
+/**
+ * Work-order (job) operational state.
+ * PostgreSQL: app.job_status
+ */
+export enum JobStatus {
+  PENDING = 'pending', // created, not assigned
+  ASSIGNED = 'assigned', // assigned to someone
+  EN_ROUTE = 'en_route', // on the way
+  IN_PROGRESS = 'in_progress', // on site
+  PAUSED = 'paused', // temporarily stopped
+  COMPLETED = 'completed', // done
+  CANCELLED = 'cancelled', // cancelled
 }
 
-// Leave Types
-export enum LEAVE_TYPE {
-  SICK = 'SICK',
-  VACATION = 'VACATION',
-  OTHER = 'OTHER',
+/**
+ * Urgency level for bookings/jobs.
+ * PostgreSQL: app.priority_level
+ */
+export enum PriorityLevel {
+  LOW = 'low', // flexible timing
+  MEDIUM = 'medium', // default
+  HIGH = 'high', // today
+  URGENT = 'urgent', // immediate
 }
 
-// Leave Status
-export enum LEAVE_STATUS {
-  PENDING = 'PENDING',
-  APPROVED = 'APPROVED',
-  REJECTED = 'REJECTED',
+/**
+ * How often a booking repeats.
+ * PostgreSQL: app.recurrence_type
+ */
+export enum RecurrenceType {
+  NONE = 'none', // one-off
+  DAILY = 'daily', // every day
+  WEEKLY = 'weekly', // once a week
+  BIWEEKLY = 'biweekly', // every two weeks
+  MONTHLY = 'monthly', // once a month
+  CUSTOM = 'custom', // custom RRULE
 }
 
-export enum GYM_STATUS {
-  PENDING = 'PENDING',
-  APPROVED = 'APPROVED',
-  REJECTED = 'REJECTED',
-  SUSPENDED = 'SUSPENDED',
+// ============================================================================
+// APP SCHEMA — Attendance
+// ============================================================================
+
+/**
+ * Daily attendance classification for an employee.
+ * PostgreSQL: app.attendance_status
+ */
+export enum AttendanceStatus {
+  PRESENT = 'present', // worked full day
+  ABSENT = 'absent', // did not show up
+  LATE = 'late', // showed up after start
+  HALF_DAY = 'half_day', // worked less than minimum
+  LEAVE = 'leave', // approved leave
+  HOLIDAY = 'holiday', // company holiday
 }
 
-// Payment Method
-export enum PAYMENT_METHOD {
-  CASH = 'CASH',
-  ONLINE = 'ONLINE',
-  CARD = 'CARD',
+// ============================================================================
+// APP SCHEMA — Money
+// ============================================================================
+
+/**
+ * Invoice lifecycle.
+ * PostgreSQL: app.invoice_status
+ */
+export enum InvoiceStatus {
+  DRAFT = 'draft', // not yet sent
+  SENT = 'sent', // delivered, unpaid
+  VIEWED = 'viewed', // customer opened it
+  PARTIALLY_PAID = 'partially_paid', // some payment received
+  PAID = 'paid', // fully settled
+  OVERDUE = 'overdue', // past due
+  CANCELLED = 'cancelled', // voided
 }
 
-// Payment Type
-export enum PAYMENT_TYPE {
-  MEMBERSHIP = 'MEMBERSHIP',
-  SALE = 'SALE',
+/**
+ * Payment transaction state.
+ * PostgreSQL: app.payment_status
+ */
+export enum PaymentStatus {
+  PENDING = 'pending', // awaiting confirmation
+  SUCCEEDED = 'succeeded', // money received
+  FAILED = 'failed', // declined / error
+  REFUNDED = 'refunded', // money returned
 }
 
-// Notification Type
-export enum NOTIFICATION_TYPE {
-  SUCCESS = 'SUCCESS',
-  ERROR = 'ERROR',
-  WARNING = 'WARNING',
-  INFO = 'INFO',
+/**
+ * Method used for a payment.
+ * PostgreSQL: app.payment_method
+ */
+export enum PaymentMethod {
+  CASH = 'cash', // physical cash
+  CARD = 'card', // credit/debit card
+  BANK_TRANSFER = 'bank_transfer', // direct bank transfer
+  ONLINE = 'online', // payment gateway
+  WALLET = 'wallet', // digital wallet
 }
 
-// Notification Status
-export enum NotificationStatus {
-  UNREAD = 'UNREAD',
-  READ = 'READ',
+// ============================================================================
+// APP SCHEMA — Notifications
+// ============================================================================
+
+/**
+ * Notification category. Drives template and routing.
+ * PostgreSQL: app.notification_type
+ */
+export enum NotificationType {
+  BOOKING = 'booking', // booking-related
+  JOB = 'job', // job status changes
+  PAYMENT = 'payment', // invoices and payments
+  SYSTEM = 'system', // platform messages
+  REVIEW = 'review', // review requests and replies
+  REMINDER = 'reminder', // time-based reminders
+  MESSAGE = 'message', // direct user-to-user
 }
 
-export enum AuthErrorCode {
-  AUTH_REQUIRED = 'AUTH_REQUIRED',
-  ACCESS_TOKEN_EXPIRED = 'ACCESS_TOKEN_EXPIRED',
-  INVALID_ACCESS_TOKEN = 'INVALID_ACCESS_TOKEN',
+/**
+ * Delivery channel for a notification.
+ * PostgreSQL: app.notification_channel
+ */
+export enum NotificationChannel {
+  IN_APP = 'in_app', // bell icon in the app
+  EMAIL = 'email', // email
+  SMS = 'sms', // text message
+  PUSH = 'push', // mobile push
+  WHATSAPP = 'whatsapp', // WhatsApp
 }
 
-export enum PLAN_TYPE {
-  BASIC = 'BASIC',
-  PRO = 'PRO',
-  ENTERPRISE = 'ENTERPRISE',
+// ============================================================================
+// APP SCHEMA — Reviews
+// ============================================================================
+
+/**
+ * Moderation state of a customer review.
+ * PostgreSQL: app.review_status
+ */
+export enum ReviewStatus {
+  PENDING = 'pending', // awaiting moderation
+  PUBLISHED = 'published', // visible
+  HIDDEN = 'hidden', // hidden by admin
+  FLAGGED = 'flagged', // reported, under review
 }
 
-export enum PLAN_FEATURE {
-  ATTENDANCE = 'ATTENDANCE',
-  BRANCH = 'BRANCH',
-  PRODUCT = 'PRODUCT',
-  NOTIFICATION = 'NOTIFICATION',
-  REPORT = 'REPORT',
-  ADVANCED_REPORT = 'ADVANCED_REPORT',
+// ============================================================================
+// APP SCHEMA — SaaS Platform
+// ============================================================================
+
+/**
+ * SaaS subscription lifecycle.
+ * PostgreSQL: app.subscription_status
+ */
+export enum SubscriptionStatus {
+  TRIALING = 'trialing', // free trial
+  ACTIVE = 'active', // paid, current
+  PAST_DUE = 'past_due', // payment failed, grace period
+  CANCELLED = 'cancelled', // cancelled, still has access
+  EXPIRED = 'expired', // access ended
 }
 
-export enum MEMBERSHIP_FEATURE {
-  GYM_ACCESS = 'GYM_ACCESS',
-  POOL_ACCESS = 'POOL_ACCESS',
-  PERSONAL_TRAINER = 'PERSONAL_TRAINER',
-  DIET_PLAN = 'DIET_PLAN',
-  LOCKER = 'LOCKER',
-  SAUNA = 'SAUNA',
+
+export function enumValues<T extends Record<string, string>>(enumObj: T): string[] {
+  return Object.values(enumObj);
 }
 
-export enum SUBSCRIPTION_STATUS {
-  TRIAL = 'TRIAL',
-  ACTIVE = 'ACTIVE',
-  EXPIRED = 'EXPIRED',
-  CANCELLED = 'CANCELLED',
-}
 
-export enum PAYMENT_STATUS {
-  PENDING = 'PENDING',
-  SUCCESS = 'SUCCESS',
-  FAILED = 'FAILED',
-  REFUNDED = 'REFUNDED',
-}
-
-export enum PAYMENT_GATEWAY {
-  ESEWA = 'ESEWA',
-  KHALTI = 'KHALTI',
-}
-
-export enum NOTIFICATION_TYPE {
-  MEMBERSHIP_EXPIRY = 'MEMBERSHIP_EXPIRY',
-  PLAN_EXPIRY = 'PLAN_EXPIRY',
-  DOCUMENT_APPROVED = 'DOCUMENT_APPROVED',
-  DOCUMENT_REJECTED = 'DOCUMENT_REJECTED',
-}
-
-export enum DOCUMENT_TYPE {
-  GYM_LICENSE = 'GYM_LICENSE',
-  GYM_REGISTRATION = 'GYM_REGISTRATION',
-  OWNER_ID = 'OWNER_ID',
-}
-
-export enum DOCUMENT_STATUS {
-  PENDING = 'PENDING',
-  APPROVED = 'APPROVED',
-  REJECTED = 'REJECTED',
-}
-
-export enum MEMBER_STATUS {
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-  SUSPENDED = 'SUSPENDED',
+export function isEnumValue<T extends Record<string, string>>(
+  enumObj: T,
+  value: unknown,
+): value is T[keyof T] {
+  return typeof value === 'string' && Object.values(enumObj).includes(value);
 }

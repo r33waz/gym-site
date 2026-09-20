@@ -8,19 +8,10 @@ import { DataSource } from 'typeorm';
 const dotenv = require('dotenv');
 dotenv.config();
 
-
 // This glob must match actual filesystem locations so TypeORM can build relation metadata.
-const entitiesPath = join(
-  __dirname,
-  '..',
-  '..',
-  'core',
-  '**',
-  'entities',
-  '*.entity.{ts,js}',
-);
+const entitiesPath = join(__dirname, '..', '..', 'core', '**', 'entities', '*.entity.{ts,js}');
 
-const migrationsPath = join(__dirname, '..','..', 'migrations', '*.{ts,js}');
+const migrationsPath = join(__dirname, '..', '..', 'migrations', '*.{ts,js}');
 /**
  * Database Configuration
  *
@@ -58,9 +49,9 @@ export const configService: TypeOrmModuleAsyncOptions = {
       migrations: [migrationsPath],
 
       autoLoadEntities: true,
-      synchronize: false, // Always false for production
-      migrationsRun: true, // Auto-run migrations on app startup
-      logging: false 
+      synchronize: true, // Always false for production
+      migrationsRun: false, // Auto-run migrations on app startup
+      logging: false,
     };
   },
 };
