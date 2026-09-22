@@ -7,25 +7,36 @@ export interface IPaginationMeta {
   total: number;
 }
 
-export interface Response<T> {
+export interface IServiceResponse<T> {
+  message: string;
+  data: T;
+  meta?: IPaginationMeta;
+}
+
+export interface IApiResponse<T> {
   status: number;
   message: string;
   data: T;
   meta?: IPaginationMeta;
 }
+
 @Injectable()
-export class TransformInterceptor<T> implements NestInterceptor<T, Response<T>> {
-  intercept(context: ExecutionContext, next: CallHandler): Observable<Response<T>> {
-    const statusCode =  context.switchToHttp().getResponse().statusCode
+export class ResponseTransformInterceptor<T> implements NestInterceptor<
+  IServiceResponse<T>,
+  IApiResponse<T>
+> {
+  intercept(context: ExecutionContext, next: CallHandler): Observable<IApiResponse<T>> {
+    const response = context.switchToHttp().getResponse();
+
     return next.handle().pipe(
-      map((response)=>{
-        if (response && typeof response === "object" && 'items' in response && Array.isArray(response?.items)){
-          const {item,...meta} = response
-          return (
-            statusCode
-          )
-        }
-      })
-    )
+      map((result: IServiceResponse<T>) => ({
+        status: response.statusCode,
+        message: result.message,
+        data: result.data,
+        ...(result.meta && {
+          meta: result.meta,
+        }),
+      })),
+    );
   }
 }

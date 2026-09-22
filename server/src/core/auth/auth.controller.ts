@@ -1,32 +1,39 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  HttpCode,
+  HttpStatus,
+  Query,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { SignupDto, UserQueryDto } from './dto/create-auth.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post()
-  create(@Body() createAuthDto: any) {
-    return this.authService.create(createAuthDto);
-  }
+  @Post('/signup')
+  @HttpCode(HttpStatus.OK)
+  async create(@Body() signupDto: SignupDto) {
+    await this.authService.singup(signupDto);
 
-  @Get()
-  findAll() {
-    return this.authService.findAll();
+    return {
+      message: 'Account created successfully',
+    };
   }
+  @Get('/findAllUser')
+  @HttpCode(HttpStatus.OK)
+  async findAllUser(@Query() query: UserQueryDto) {
+    const users = await this.authService.findAllUsers(query);
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthDto: any) {
-    return this.authService.update(+id, updateAuthDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(+id);
+    return {
+      message: 'Account created successfully',
+      data: users,
+    };
   }
 }

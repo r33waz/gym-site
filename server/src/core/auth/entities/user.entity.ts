@@ -2,6 +2,7 @@ import { UserStatus } from '../../../constant/enum/common.enum';
 import { BaseEntity } from '../../../shared/baseEntity';
 import { Column, Entity, OneToMany } from 'typeorm';
 import { RefreshToken } from './auth_refresh.token.entity';
+import { UserRole } from './user-role.entity';
 
 @Entity({
   schema: 'auth',
@@ -18,8 +19,11 @@ export class User extends BaseEntity {
   })
   phoneNumber: string;
 
-  @Column({ type: 'text' })
-  password: string;
+  @Column({
+    name: 'password_hash',
+    type: 'text',
+  })
+  passwordHash: string;
 
   @Column({
     name: 'first_name',
@@ -101,4 +105,7 @@ export class User extends BaseEntity {
 
   @OneToMany(() => RefreshToken, (refreshToken) => refreshToken.user)
   refreshTokens: RefreshToken[];
+
+  @OneToMany(() => UserRole, (ur) => ur.user)
+  userRoles: UserRole[];
 }

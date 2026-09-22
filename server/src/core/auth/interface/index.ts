@@ -11,4 +11,8 @@ export interface AuthResponse {
   accessToken: string;
   user: UserResponseDto;
 }
-
+export interface AuthenticatedUser {
+  id: number;
+  email: string;
+  roles: string[];
+}

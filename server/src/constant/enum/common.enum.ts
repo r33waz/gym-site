@@ -1,12 +1,12 @@
 /**
  * ============================================================================
- * ALL ENUMS — Field Service SaaS
+ * ALL ENUMS — FIELD SERVICE SAAS
  * ============================================================================
  * Single source of truth for every enum in the system.
  *
  * Naming convention:
  *   • TypeScript keys  : SCREAMING_SNAKE_CASE
- *   • String values    : lowercase_snake_case (matches PostgreSQL enums)
+ *   • String values    : SCREAMING_SNAKE_CASE
  *
  * Every enum here maps 1:1 to a PostgreSQL enum type.
  * The `enumName` + `schema` used in TypeORM entities MUST match exactly.
@@ -22,14 +22,14 @@
  * PostgreSQL: auth.user_status
  */
 export enum UserStatus {
-  PENDING = 'pending', // awaiting email/phone verification
-  ACTIVE = 'active', // fully usable
-  INACTIVE = 'inactive', // dormant or self-deactivated
-  SUSPENDED = 'suspended', // blocked by admin
+  PENDING = 'PENDING',
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  SUSPENDED = 'SUSPENDED',
 }
 
 // ============================================================================
-// APP SCHEMA — Company & People
+// APP SCHEMA — COMPANY & PEOPLE
 // ============================================================================
 
 /**
@@ -37,10 +37,10 @@ export enum UserStatus {
  * PostgreSQL: app.company_status
  */
 export enum CompanyStatus {
-  TRIAL = 'trial', // free trial
-  ACTIVE = 'active', // paying customer
-  SUSPENDED = 'suspended', // blocked, usually non-payment
-  CANCELLED = 'cancelled', // no longer using the platform
+  TRIAL = 'TRIAL',
+  ACTIVE = 'ACTIVE',
+  SUSPENDED = 'SUSPENDED',
+  CANCELLED = 'CANCELLED',
 }
 
 /**
@@ -48,14 +48,14 @@ export enum CompanyStatus {
  * PostgreSQL: app.employee_status
  */
 export enum EmployeeStatus {
-  ACTIVE = 'active', // working, can receive jobs
-  ON_LEAVE = 'on_leave', // temporary leave, no jobs
-  INACTIVE = 'inactive', // not working but not terminated
-  TERMINATED = 'terminated', // employment ended
+  ACTIVE = 'ACTIVE',
+  ON_LEAVE = 'ON_LEAVE',
+  INACTIVE = 'INACTIVE',
+  TERMINATED = 'TERMINATED',
 }
 
 // ============================================================================
-// APP SCHEMA — Bookings & Jobs
+// APP SCHEMA — BOOKINGS & JOBS
 // ============================================================================
 
 /**
@@ -63,12 +63,12 @@ export enum EmployeeStatus {
  * PostgreSQL: app.booking_status
  */
 export enum BookingStatus {
-  REQUESTED = 'requested', // asked for service
-  QUOTED = 'quoted', // waiting for quote acceptance
-  SCHEDULED = 'scheduled', // confirmed date/time
-  COMPLETED = 'completed', // work done
-  CANCELLED = 'cancelled', // cancelled by either party
-  NO_SHOW = 'no_show', // customer absent on arrival
+  REQUESTED = 'REQUESTED',
+  QUOTED = 'QUOTED',
+  SCHEDULED = 'SCHEDULED',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED',
+  NO_SHOW = 'NO_SHOW',
 }
 
 /**
@@ -76,13 +76,13 @@ export enum BookingStatus {
  * PostgreSQL: app.job_status
  */
 export enum JobStatus {
-  PENDING = 'pending', // created, not assigned
-  ASSIGNED = 'assigned', // assigned to someone
-  EN_ROUTE = 'en_route', // on the way
-  IN_PROGRESS = 'in_progress', // on site
-  PAUSED = 'paused', // temporarily stopped
-  COMPLETED = 'completed', // done
-  CANCELLED = 'cancelled', // cancelled
+  PENDING = 'PENDING',
+  ASSIGNED = 'ASSIGNED',
+  EN_ROUTE = 'EN_ROUTE',
+  IN_PROGRESS = 'IN_PROGRESS',
+  PAUSED = 'PAUSED',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED',
 }
 
 /**
@@ -90,10 +90,10 @@ export enum JobStatus {
  * PostgreSQL: app.priority_level
  */
 export enum PriorityLevel {
-  LOW = 'low', // flexible timing
-  MEDIUM = 'medium', // default
-  HIGH = 'high', // today
-  URGENT = 'urgent', // immediate
+  LOW = 'LOW',
+  MEDIUM = 'MEDIUM',
+  HIGH = 'HIGH',
+  URGENT = 'URGENT',
 }
 
 /**
@@ -101,16 +101,16 @@ export enum PriorityLevel {
  * PostgreSQL: app.recurrence_type
  */
 export enum RecurrenceType {
-  NONE = 'none', // one-off
-  DAILY = 'daily', // every day
-  WEEKLY = 'weekly', // once a week
-  BIWEEKLY = 'biweekly', // every two weeks
-  MONTHLY = 'monthly', // once a month
-  CUSTOM = 'custom', // custom RRULE
+  NONE = 'NONE',
+  DAILY = 'DAILY',
+  WEEKLY = 'WEEKLY',
+  BIWEEKLY = 'BIWEEKLY',
+  MONTHLY = 'MONTHLY',
+  CUSTOM = 'CUSTOM',
 }
 
 // ============================================================================
-// APP SCHEMA — Attendance
+// APP SCHEMA — ATTENDANCE
 // ============================================================================
 
 /**
@@ -118,16 +118,16 @@ export enum RecurrenceType {
  * PostgreSQL: app.attendance_status
  */
 export enum AttendanceStatus {
-  PRESENT = 'present', // worked full day
-  ABSENT = 'absent', // did not show up
-  LATE = 'late', // showed up after start
-  HALF_DAY = 'half_day', // worked less than minimum
-  LEAVE = 'leave', // approved leave
-  HOLIDAY = 'holiday', // company holiday
+  PRESENT = 'PRESENT',
+  ABSENT = 'ABSENT',
+  LATE = 'LATE',
+  HALF_DAY = 'HALF_DAY',
+  LEAVE = 'LEAVE',
+  HOLIDAY = 'HOLIDAY',
 }
 
 // ============================================================================
-// APP SCHEMA — Money
+// APP SCHEMA — MONEY
 // ============================================================================
 
 /**
@@ -135,13 +135,13 @@ export enum AttendanceStatus {
  * PostgreSQL: app.invoice_status
  */
 export enum InvoiceStatus {
-  DRAFT = 'draft', // not yet sent
-  SENT = 'sent', // delivered, unpaid
-  VIEWED = 'viewed', // customer opened it
-  PARTIALLY_PAID = 'partially_paid', // some payment received
-  PAID = 'paid', // fully settled
-  OVERDUE = 'overdue', // past due
-  CANCELLED = 'cancelled', // voided
+  DRAFT = 'DRAFT',
+  SENT = 'SENT',
+  VIEWED = 'VIEWED',
+  PARTIALLY_PAID = 'PARTIALLY_PAID',
+  PAID = 'PAID',
+  OVERDUE = 'OVERDUE',
+  CANCELLED = 'CANCELLED',
 }
 
 /**
@@ -149,10 +149,10 @@ export enum InvoiceStatus {
  * PostgreSQL: app.payment_status
  */
 export enum PaymentStatus {
-  PENDING = 'pending', // awaiting confirmation
-  SUCCEEDED = 'succeeded', // money received
-  FAILED = 'failed', // declined / error
-  REFUNDED = 'refunded', // money returned
+  PENDING = 'PENDING',
+  SUCCEEDED = 'SUCCEEDED',
+  FAILED = 'FAILED',
+  REFUNDED = 'REFUNDED',
 }
 
 /**
@@ -160,15 +160,15 @@ export enum PaymentStatus {
  * PostgreSQL: app.payment_method
  */
 export enum PaymentMethod {
-  CASH = 'cash', // physical cash
-  CARD = 'card', // credit/debit card
-  BANK_TRANSFER = 'bank_transfer', // direct bank transfer
-  ONLINE = 'online', // payment gateway
-  WALLET = 'wallet', // digital wallet
+  CASH = 'CASH',
+  CARD = 'CARD',
+  BANK_TRANSFER = 'BANK_TRANSFER',
+  ONLINE = 'ONLINE',
+  WALLET = 'WALLET',
 }
 
 // ============================================================================
-// APP SCHEMA — Notifications
+// APP SCHEMA — NOTIFICATIONS
 // ============================================================================
 
 /**
@@ -176,13 +176,13 @@ export enum PaymentMethod {
  * PostgreSQL: app.notification_type
  */
 export enum NotificationType {
-  BOOKING = 'booking', // booking-related
-  JOB = 'job', // job status changes
-  PAYMENT = 'payment', // invoices and payments
-  SYSTEM = 'system', // platform messages
-  REVIEW = 'review', // review requests and replies
-  REMINDER = 'reminder', // time-based reminders
-  MESSAGE = 'message', // direct user-to-user
+  BOOKING = 'BOOKING',
+  JOB = 'JOB',
+  PAYMENT = 'PAYMENT',
+  SYSTEM = 'SYSTEM',
+  REVIEW = 'REVIEW',
+  REMINDER = 'REMINDER',
+  MESSAGE = 'MESSAGE',
 }
 
 /**
@@ -190,15 +190,15 @@ export enum NotificationType {
  * PostgreSQL: app.notification_channel
  */
 export enum NotificationChannel {
-  IN_APP = 'in_app', // bell icon in the app
-  EMAIL = 'email', // email
-  SMS = 'sms', // text message
-  PUSH = 'push', // mobile push
-  WHATSAPP = 'whatsapp', // WhatsApp
+  IN_APP = 'IN_APP',
+  EMAIL = 'EMAIL',
+  SMS = 'SMS',
+  PUSH = 'PUSH',
+  WHATSAPP = 'WHATSAPP',
 }
 
 // ============================================================================
-// APP SCHEMA — Reviews
+// APP SCHEMA — REVIEWS
 // ============================================================================
 
 /**
@@ -206,14 +206,14 @@ export enum NotificationChannel {
  * PostgreSQL: app.review_status
  */
 export enum ReviewStatus {
-  PENDING = 'pending', // awaiting moderation
-  PUBLISHED = 'published', // visible
-  HIDDEN = 'hidden', // hidden by admin
-  FLAGGED = 'flagged', // reported, under review
+  PENDING = 'PENDING',
+  PUBLISHED = 'PUBLISHED',
+  HIDDEN = 'HIDDEN',
+  FLAGGED = 'FLAGGED',
 }
 
 // ============================================================================
-// APP SCHEMA — SaaS Platform
+// APP SCHEMA — SAAS PLATFORM
 // ============================================================================
 
 /**
@@ -221,18 +221,27 @@ export enum ReviewStatus {
  * PostgreSQL: app.subscription_status
  */
 export enum SubscriptionStatus {
-  TRIALING = 'trialing', // free trial
-  ACTIVE = 'active', // paid, current
-  PAST_DUE = 'past_due', // payment failed, grace period
-  CANCELLED = 'cancelled', // cancelled, still has access
-  EXPIRED = 'expired', // access ended
+  TRIALING = 'TRIALING',
+  ACTIVE = 'ACTIVE',
+  PAST_DUE = 'PAST_DUE',
+  CANCELLED = 'CANCELLED',
+  EXPIRED = 'EXPIRED',
 }
 
+export enum PermissionAction {
+  CREATE = 'CREATE',
+  READ = 'READ',
+  UPDATE = 'UPDATE',
+  DELETE = 'DELETE',
+}
+
+// ============================================================================
+// ENUM HELPERS
+// ============================================================================
 
 export function enumValues<T extends Record<string, string>>(enumObj: T): string[] {
   return Object.values(enumObj);
 }
-
 
 export function isEnumValue<T extends Record<string, string>>(
   enumObj: T,

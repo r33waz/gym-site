@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { UserModule } from './core/user/user.module';
 import { AuthModule } from './core/auth/auth.module';
 import { CompaniesModule } from './core/companies/companies.module';
 import { EmployeesModule } from './core/employees/employees.module';
@@ -25,7 +24,6 @@ import { ConfigModule } from '@nestjs/config';
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync(configService),
-    UserModule,
     AuthModule,
     CompaniesModule,
     EmployeesModule,
