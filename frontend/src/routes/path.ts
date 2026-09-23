@@ -1,30 +1,26 @@
-export const PublicRoute = {
-  Login: "/login",
-  Register: "/register",
-};
+import { adminRoutePaths } from "@/core/private/Admin/admin.path"; // Path constants for admin section routes
+import { gymRoutePath } from "@/core/private/Gym/gym.path"; // Path constants for gym management routes
+import { staffRoutePath } from "@/core/private/Staff/staff.path"; // Path constants for staff section routes
+import { memberRoutePath } from "@/core/private/MemberShips/memberShip.path"; // Path constants for membership routes
 
-export const SuperAdminRoute = {
-  Dashboard: "/superadmin/dashboard",
-  Members: "/superadmin/members",
-  Staff: "/superadmin/staff",
-  Settings: "/superadmin/settings",
-};
+export type RouteType = "private" | "public" | "bypass" | "auth"; // "auth" = login/signup pages that skip the header
 
-export const AdminRoute = {
-  Dashboard: "/admin/dashboard",
-  Plans: "/admin/plans",
-  Reports: "/admin/reports",
-  Settings: "/admin/settings",
-};
+export const privateRoutePath = {
+  base: "/", // Base path for the private app shell
+  ...adminRoutePaths, // Merge all admin route path constants
+  ...gymRoutePath, // Merge all gym route path constants
+  ...staffRoutePath, // Merge all staff route path constants
+  ...memberRoutePath, // Merge all membership route path constants
+} as const; // Freeze the object so paths are inferred as literal types
 
-export const StaffRoute = {
-  Dashboard: "/staff/dashboard",
-  Schedule: "/staff/schedule",
-};
+export const publicRoutePath = {
+  login: "/login", // Login page path
+  signup: "/signup", // Signup page path
+} as const;
 
-export const UserRoute = {
-  Dashboard: "/user/dashboard",
-  Profile: "/user/profile",
-  BookClasses: "/user/book-classes",
-  Payments: "/user/payments",
-};
+export const routePaths = {
+  ...privateRoutePath, // Expose all private paths under a single routePaths object
+  ...publicRoutePath,
+} as const;
+
+export type RoutePaths = (typeof routePaths)[keyof typeof routePaths]; // Union type of all valid route path strings

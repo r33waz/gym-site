@@ -1,5 +1,12 @@
+import PageNotFound from "./core/public/components/pageNotFound";
+
 function App() {
-  return <></>;
+  return (
+    <>
+      {/* <Login /> */}
+      <PageNotFound />
+    </>
+  );
 }
 
 export default App;

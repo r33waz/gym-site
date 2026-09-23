@@ -16,15 +16,12 @@ interface IThemeContext {
 const ThemeContext = createContext<IThemeContext | undefined>(undefined);
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  // Initialize theme from localStorage or default to system preference
+  // Default to light mode
   const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window === "undefined") return "light"; // SSR safe
     const storedTheme = localStorage.getItem("theme") as Theme | null;
     if (storedTheme) return storedTheme;
-
-    // Optional: Respect system preference
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    return prefersDark ? "dark" : "light";
+    return "light"; // Default to light mode
   });
 
   // Apply theme class to document root
