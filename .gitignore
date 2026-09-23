@@ -10,6 +10,9 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+frontend/.eslintcache
+server/.eslintcache
+
 node_modules
 dist
 dist-ssr

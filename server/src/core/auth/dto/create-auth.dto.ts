@@ -1,41 +1,133 @@
-import { IsBoolean, IsEmail, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsDateString, IsEmail, IsEnum, IsIn, IsInt, IsOptional, IsString, Matches, Max, MaxLength, Min, MinLength } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
+import { UserStatus } from '../../../constant/enum/common.enum';
+export class SignupDto {
+  @IsEmail()
+  email: string;
 
-export class ILoginDto {
   @IsString()
+  @MinLength(8)
+  @MaxLength(72)
+  password: string;
+
+  @IsString()
+  @Transform(({ value }) => value?.trim())
+  firstName: string;
+
+  @IsString()
+  @IsOptional()
+  @Transform(({ value }) => value?.trim())
+  middleName: string;
+
+  @IsString()
+  @Transform(({ value }) => value?.trim())
+  lastName: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(150)
+  displayName?: string;
+
+  @IsOptional()
+  @Matches(/^\+?[0-9 \-()]{6,30}$/)
+  phoneNumber?: string;
+}
+
+export class UserQueryDto {
+  // Pagination
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  page: number = 1;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  @Max(100)
+  limit: number = 10;
+
+  // General search
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => value?.trim())
+  search?: string;
+
+  // Name filters
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => value?.trim())
+  firstName?: string;
+
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => value?.trim())
+  middleName?: string;
+
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => value?.trim())
+  lastName?: string;
+
+  // Contact filters
+  @IsOptional()
+  @IsEmail()
   email?: string;
-  
-  @IsString()
-  password: string;
-  
-}
 
-export class IForgetPasswordDto {
-  @IsEmail()
+  @IsOptional()
   @IsString()
-  email: string;
-}
+  phoneNumber?: string;
 
-export class IResetPasswordDto {
-  @IsEmail()
-  email: string;
+  // Account filters
+  @IsOptional()
+  @IsEnum(UserStatus)
+  status?: UserStatus;
 
-  @IsString()
-  otp: string;
+  @IsOptional()
+  @Type(() => Boolean)
+  @IsBoolean()
+  emailVerified?: boolean;
 
-  @IsString()
-  password: string;
+  @IsOptional()
+  @Type(() => Boolean)
+  @IsBoolean()
+  phoneVerified?: boolean;
 
-  @IsString()
-  confirmPassword?: string;
-}
+  @IsOptional()
+  @Type(() => Boolean)
+  @IsBoolean()
+  twoFactorEnabled?: boolean;
 
-export class IChangePasswordDto {
-  @IsString()
-  oldPassword: string;
+  @IsOptional()
+  @Type(() => Boolean)
+  @IsBoolean()
+  isPlatformAdmin?: boolean;
 
-  @IsString()
-  newPassword: string;
+  // Created date
+  @IsOptional()
+  @IsDateString()
+  createdFrom?: string;
 
-  @IsString()
-  confirmNewPassword?: string;
+  @IsOptional()
+  @IsDateString()
+  createdTo?: string;
+
+  // Last login date
+  @IsOptional()
+  @IsDateString()
+  lastLoginFrom?: string;
+
+  @IsOptional()
+  @IsDateString()
+  lastLoginTo?: string;
+
+  // Sorting
+  @IsOptional()
+  @IsIn(['firstName', 'lastName', 'email', 'createdAt', 'lastLoginAt'])
+  sortBy?: string = 'createdAt';
+
+  @IsOptional()
+  @IsIn(['ASC', 'DESC'])
+  sortOrder?: 'ASC' | 'DESC' = 'DESC';
 }

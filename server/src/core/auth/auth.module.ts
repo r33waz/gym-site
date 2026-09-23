@@ -1,26 +1,18 @@
 import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from '../user/entities/user.entity';
-import { Auth } from './entities/auth.entity';
+import { User } from './entities/user.entity';
+import { UserRole } from './entities/user-role.entity';
+import { PasswordService } from './services/password.service';
+import { TokenService } from './services/token.service';
+import { RefreshToken } from './entities/auth_refresh.token.entity';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports: [
-    // Make a Repository for the Auth entity available in this module.
-    TypeOrmModule.forFeature([Auth]),
-    ConfigModule,
-    JwtModule.registerAsync({
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        secret: config.get<string>('JWT_SECRET_KEY'),
-        signOptions: { expiresIn: 3600 }, // 1 hour
-      }),
-    }),
-  ],
+  imports: [TypeOrmModule.forFeature([User, UserRole, RefreshToken]), JwtModule.register({})],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, PasswordService, TokenService],
+  exports: [AuthService],
 })
 export class AuthModule {}

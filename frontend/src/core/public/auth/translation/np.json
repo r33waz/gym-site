@@ -3,20 +3,25 @@
     "email": "इमेल वा प्रयोगकर्ता नाम",
     "password": "पासवर्ड"
   },
-   "signup": {
+  "signup": {
     "username": "प्रयोगकर्ता नाम",
     "email": "इमेल ",
     "password": "पासवर्ड",
-    "confirmPassword":"पासवर्ड पुष्टि गर्नुहोस्"
+    "confirmPassword": "पासवर्ड पुष्टि गर्नुहोस्"
   },
-  "form":{
-    "validEmail":"वैध इमेल प्रविष्ट गर्नुहोस्",
-    "validUsername":"प्रयोगकर्ता नाममा अक्षरहरू मात्र हुनुपर्छ (कुनै संख्या वा विशेष क्यारेक्टरहरू छैनन्)",
-    "emailrequired":"इमेल आवश्यक छ",
-    "emailOrUsernamerequired":"इमेल वा प्रयोगकर्ता नाम आवश्यक छ",
-    "usernameRequired":"प्रयोगकर्ता नाम आवश्यक छ",
-    "passwordRequired":"पासवर्ड आवश्यक छ",
-    "confirmPasswordRequired":"पासवर्ड पुष्टि गर्नुहोस् आवश्यक छ",
-    "matchPassword":"पासवर्ड मान्य छैन"
+  "form": {
+    "validEmail": "वैध इमेल प्रविष्ट गर्नुहोस्",
+    "validUsername": "प्रयोगकर्ता नाममा अक्षरहरू मात्र हुनुपर्छ (कुनै संख्या वा विशेष क्यारेक्टरहरू छैनन्)",
+    "emailrequired": "इमेल आवश्यक छ",
+    "emailOrUsernamerequired": "इमेल वा प्रयोगकर्ता नाम आवश्यक छ",
+    "usernameRequired": "प्रयोगकर्ता नाम आवश्यक छ",
+    "passwordRequired": "पासवर्ड आवश्यक छ",
+    "confirmPasswordRequired": "पासवर्ड पुष्टि गर्नुहोस् आवश्यक छ",
+    "matchPassword": "पासवर्ड मान्य छैन",
+    "passwordMinLength": "पासवर्ड कम्तीमा ८ अक्षरको हुनुपर्छ",
+    "passwordUppercase": "पासवर्डमा कम्तीमा एउटा ठूलो अक्षर हुनुपर्छ",
+    "passwordLowercase": "पासवर्डमा कम्तीमा एउटा सानो अक्षर हुनुपर्छ",
+    "passwordNumber": "पासवर्डमा कम्तीमा एउटा अंक हुनुपर्छ",
+    "passwordSpecialChar": "पासवर्डमा कम्तीमा एउटा विशेष क्यारेक्टर हुनुपर्छ"
   }
 }
