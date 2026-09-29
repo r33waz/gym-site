@@ -1,23 +1,28 @@
-import {
-  Entity, PrimaryColumn, ManyToOne, JoinColumn,
-} from 'typeorm';
+import { Entity, PrimaryColumn, ManyToOne, JoinColumn, Index, CreateDateColumn } from 'typeorm';
 import { User } from './user.entity';
 import { Role } from './role.entity';
-import { BaseEntity } from '../../../shared/baseEntity';
 
 @Entity({ schema: 'auth', name: 'user_roles' })
-export class UserRole extends BaseEntity {
-  @PrimaryColumn({ name: 'user_id', type: 'int' })
-  userId: number;
+export class UserRole {
+  @PrimaryColumn({ name: 'user_id', type: 'uuid' })
+  userId: string;
 
-  @PrimaryColumn({ name: 'role_id', type: 'int' })
-  roleId: number;
+  @PrimaryColumn({ name: 'role_id', type: 'uuid' })
+  roleId: string;
 
+  @PrimaryColumn({ name: 'company_id', type: 'uuid' })
+  companyId: string;
+
+  @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
+  createdAt: Date;
+
+  @Index()
   @ManyToOne(() => User, (u) => u.userRoles, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @ManyToOne(() => Role, { onDelete: 'CASCADE' })
+  @Index()
+  @ManyToOne(() => Role, (r) => r.userRoles, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'role_id' })
   role: Role;
 }

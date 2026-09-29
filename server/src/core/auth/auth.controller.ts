@@ -9,9 +9,13 @@ import {
   HttpCode,
   HttpStatus,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignupDto, UserQueryDto } from './dto/create-auth.dto';
+import { JwtAutnGuard } from './guard/jwt-auth.guard';
+import { RolesGuard } from './guard/role.guard';
+import { ROLES_KEY } from '../../constant';
 
 @Controller('auth')
 export class AuthController {
@@ -28,6 +32,7 @@ export class AuthController {
   }
   @Get('/findAllUser')
   @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAutnGuard)
   async findAllUser(@Query() query: UserQueryDto) {
     const users = await this.authService.findAllUsers(query);
 

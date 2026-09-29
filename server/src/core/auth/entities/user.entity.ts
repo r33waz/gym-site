@@ -1,6 +1,6 @@
 import { UserStatus } from '../../../constant/enum/common.enum';
 import { BaseEntity } from '../../../shared/baseEntity';
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, OneToMany, Index } from 'typeorm';
 import { RefreshToken } from './auth_refresh.token.entity';
 import { UserRole } from './user-role.entity';
 
@@ -9,6 +9,7 @@ import { UserRole } from './user-role.entity';
   name: 'users',
 })
 export class User extends BaseEntity {
+  @Index({ unique: true })
   @Column({ unique: true })
   email: string;
 

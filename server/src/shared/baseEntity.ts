@@ -1,14 +1,20 @@
 import {
-  Column,
   CreateDateColumn,
   DeleteDateColumn,
-  Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ schema: 'auth', name: 'user_roles' })
-export class BaseEntity {
+/**
+ * BaseEntity provides the common audit columns shared by every entity in the
+ * app.
+ *
+ * NOTE: This class must NOT be decorated with @Entity(). A decorated class is
+ * registered by TypeORM as its own standalone table, which caused it to clash
+ * with the concrete entities that extend it (e.g. it was previously declared
+ * as the `auth.user_roles` table).
+ */
+export abstract class BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
@@ -19,5 +25,5 @@ export class BaseEntity {
   updatedAt: Date;
 
   @DeleteDateColumn({ name: 'deleted_At' })
-  deletedAt;
+  deletedAt: Date | null;
 }

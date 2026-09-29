@@ -2,8 +2,8 @@ export type FieldType =
   | "text"
   | "password"
   | "textarea"
-  | "select" // Searchable Single Combobox
-  | "multi-select" // Searchable Multi-Select Combobox
+  | "select"
+  | "multi-select"
   | "radio"
   | "date"
   | "checkbox-single"
@@ -19,7 +19,7 @@ export interface FieldConfig {
   label: string;
   type: FieldType;
   placeholder?: string;
-  options?: FieldOption[]; // Structured as data objects for filtering accuracy
-  initialValue: any;
+  options?: FieldOption[];
   colSpan?: 1 | 2 | 3 | 4 | 5 | 6;
+  disable?: boolean;
 }
