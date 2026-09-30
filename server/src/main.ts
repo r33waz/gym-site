@@ -1,12 +1,20 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import cookieParser from 'cookie-parser';
+
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { ResponseTransformInterceptor } from './interceptor/transform.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  const configService = app.get(ConfigService);
+
+  const port = configService.get<number>('app.port', 3000);
+
+  const frontendUrl = configService.get<string>('app.frontendUrl', 'http://localhost:5173');
 
   app.use(cookieParser());
 
@@ -19,22 +27,20 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
   app.useGlobalFilters(new HttpExceptionFilter());
 
-  const origin = process.env.FRONTEND_URL;
-
   app.enableCors({
-    origin: origin ? origin.replace(/\/$/, '') : false,
-    methods: 'GET,POST,PUT,DELETE,PATCH,OPTIONS',
+    origin: frontendUrl,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     credentials: true,
-    allowedHeaders: 'Content-Type,Accept,Authorization',
+    allowedHeaders: ['Content-Type', 'Accept', 'Authorization'],
   });
-
-  const port = process.env.PORT ? Number(process.env.PORT) : 8000;
 
   await app.listen(port);
 
   console.log(`Application is running on: http://localhost:${port}`);
+
 }
 
 bootstrap();

@@ -17,7 +17,7 @@ export const useLogin = () => {
       return apiRequest<BackendResponse<null>>({
         // Typed with BackendResponse — no data payload expected on login response
         apiDetails: authLogin, // Pass the login endpoint config (route, method)
-        requestData: { ...requestData }, // Spread payload as request body
+        requestData: { requestData }, // Spread payload as request body
       });
     },
     onSuccess: (res) => {

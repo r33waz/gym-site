@@ -1,6 +1,8 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 import LanguageTrans from "@/components/common/LanguageTrans";
 
@@ -16,6 +18,16 @@ const RegisterForm = () => {
   const { t } = useTranslation();
   const { mutate: signupMutation, isPending } = useSignup();
 
+  const form = useForm<ISignupInterface>({
+    resolver: yupResolver(registerSchema),
+    defaultValues: {
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
+
   const fields: FieldConfig[] = useMemo(
     () => [
       {
@@ -26,7 +38,6 @@ const RegisterForm = () => {
           "Enter your username",
           "आफ्नो प्रयोगकर्ता नाम प्रविष्ट गर्नुहोस्",
         ),
-        initialValue: "",
         colSpan: 3,
       },
       {
@@ -37,7 +48,6 @@ const RegisterForm = () => {
           "Enter your email",
           "आफ्नो इमेल प्रविष्ट गर्नुहोस्",
         ),
-        initialValue: "",
         colSpan: 3,
       },
       {
@@ -48,9 +58,7 @@ const RegisterForm = () => {
           "Enter your password",
           "आफ्नो पासवर्ड प्रविष्ट गर्नुहोस्",
         ),
-        initialValue: "",
         colSpan: 3,
-        showPasswordRules: true,
       },
       {
         name: "confirmPassword",
@@ -60,9 +68,7 @@ const RegisterForm = () => {
           "Re-enter your password",
           "आफ्नो पासवर्ड पुनः प्रविष्ट गर्नुहोस्",
         ),
-        initialValue: "",
         colSpan: 3,
-        matchField: "password",
       },
     ],
     [t],
@@ -73,9 +79,6 @@ const RegisterForm = () => {
   };
 
   return (
-    // Same fixed inset-0 approach as Login — pulls this page out of
-    // normal document flow so it fills the real viewport regardless of
-    // any parent layout/route wrapper's max-width or padding.
     <div className="fixed inset-0 z-50 grid lg:grid-cols-2 bg-background overflow-y-auto">
       <div className="hidden lg:flex bg-primary p-10 flex-col justify-center">
         <h1 className="text-4xl font-bold text-white">
@@ -134,9 +137,9 @@ const RegisterForm = () => {
           </p>
 
           <div className="w-full">
-            <DynamicForm
+            <DynamicForm<ISignupInterface>
               config={fields}
-              validationSchema={registerSchema}
+              form={form}
               onSubmit={handleSignup}
               submitButtonText={getTextByLanguage("Sign Up", "साइन अप")}
               loading={isPending}

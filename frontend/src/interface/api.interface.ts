@@ -7,6 +7,11 @@ export interface BackendResponse<T = any> {
   data: T; // Actual response payload — generic so each endpoint can type it
 }
 
+export interface BackendErrorRespons {
+  success: boolean; // Indicates whether the request was successful
+  message: string; // Human-readable message from the backend
+}
+
 export interface ApiDetails {
   apiRouteName: string;
   requestMethod: HTTP_METHOD;
