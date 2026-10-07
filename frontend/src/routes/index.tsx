@@ -23,7 +23,7 @@ export const router = createBrowserRouter([
         <Root /> {/* Private app shell that renders nested child routes */}
       </>
     ),
-    errorElement: <ErrorBoundary />, // Render error boundary if this route or its children throw
+    errorElement: <ErrorBoundary />, // Render error boundary if this route or its children throw,
     children: [
       {
         element: <PrivateLayout />, // Wrap all private children with PrivateLayout

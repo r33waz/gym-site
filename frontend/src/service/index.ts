@@ -54,7 +54,7 @@ apiInstance.interceptors.response.use(
   (error: AxiosError) => {
     console.log("🚀 ~ error:", error); // Log the raw error for debugging
     // Check if server responded with 403 Forbidden
-    if (error.response?.status === 403) {
+    if (error.response?.status === 401) {
       // ⚠️ IMPORTANT:
       // force browser navigation to login page
       window.location.replace("/login"); // Hard redirect to login on forbidden response
