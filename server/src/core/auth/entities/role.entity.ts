@@ -5,7 +5,8 @@ import {
   Column, // Marks a property as a column.
   Index, // Creates an index.
   OneToMany, // Declares a one-to-many relation.
-  Unique, // Adds a composite unique constraint.
+  Unique,
+  DeleteDateColumn, // Adds a composite unique constraint.
 } from 'typeorm';
 
 import { BaseEntity } from '../../../shared/baseEntity';
@@ -55,6 +56,7 @@ export class Role extends BaseEntity {
   @OneToMany(() => UserRole, (ur) => ur.role)
   userRoles: UserRole[];
 
-  // Inherited from BaseEntity:
-  //   id, createdAt, updatedAt, deletedAt
+  // Soft-deletion timestamp for roles
+  @DeleteDateColumn({ name: 'deleted_at', type: 'timestamptz', nullable: true })
+  deletedAt: Date | null;
 }

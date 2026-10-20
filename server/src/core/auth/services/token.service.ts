@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RefreshToken } from '../entities/auth_refresh.token.entity';
@@ -6,6 +6,7 @@ import { LessThan, Repository } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { JwtPayload } from '../interface';
 import { createHash, randomBytes } from 'crypto';
+import type { StringValue } from 'ms';
 
 @Injectable()
 export class TokenService {
@@ -18,12 +19,19 @@ export class TokenService {
 
   //   this fucntion creates the JWT access token from the user information
   signinAccessToken(payload: JwtPayload): string {
-    return this.jwtService.sign(payload);
+    const expiresIn = (this.config.get<string>('jwt.accessExpiresIn') ?? '15m') as StringValue;
+
+    return this.jwtService.sign(payload, {
+      secret: this.config.getOrThrow<string>('jwt.accessSecret'),
+      expiresIn,
+    });
   }
 
   //   this service verfies the access token
   verifyAccessToken(token: string): JwtPayload {
-    return this.jwtService.verify<JwtPayload>(token);
+    return this.jwtService.verify<JwtPayload>(token, {
+      secret: this.config.getOrThrow<string>('jwt.accessSecret'),
+    });
   }
 
   //   generateNewRefreshToken
@@ -45,7 +53,7 @@ export class TokenService {
 
     // create prepares the entity in the memory
     const refreshToken = await this.refreshTokenRepo.create({
-      id:userId,
+      id: userId,
       tokenHash: tokenHashed,
       expiresAt,
       userAgent: meta?.userAgent ?? null,
@@ -61,7 +69,9 @@ export class TokenService {
   async verifyRefreshToken(raw: string): Promise<boolean> {
     const hashedToken = this.hashToken(raw);
     const row = await this.refreshTokenRepo.findOne({ where: { tokenHash: hashedToken } });
-    if (!row) return false;
+    if (!row || row.revokedAt || row.expiresAt < new Date()) {
+      throw new UnauthorizedException('Session expired please login');
+    }
     if (row.revokedAt) return false;
     if (row.expiresAt < new Date()) return false;
     return true;

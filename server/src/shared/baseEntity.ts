@@ -24,6 +24,4 @@ export abstract class BaseEntity {
   @UpdateDateColumn({ name: 'updated_At' })
   updatedAt: Date;
 
-  @DeleteDateColumn({ name: 'deleted_At' })
-  deletedAt: Date | null;
 }

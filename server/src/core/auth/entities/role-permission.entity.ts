@@ -7,7 +7,8 @@ import {
   ManyToOne, // Many grants → one role; many grants → one menu.
   JoinColumn, // Specifies the FK column name.
   Index, // Creates indexes for fast lookups.
-  CreateDateColumn, // Auto-fills on creation.
+  CreateDateColumn,
+  PrimaryGeneratedColumn, // Auto-fills on creation.
 } from 'typeorm';
 
 import { Role } from './role.entity';
@@ -25,18 +26,21 @@ import { Menu } from './menu.entity';
  */
 @Entity({ schema: 'auth', name: 'role_permissions' })
 export class RolePermission {
+  // Unique UUID primary key
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
   // ─── Composite primary key ────────────────────────────
   // Which role. Part 1 of the PK.
-  @PrimaryColumn({ name: 'role_id', type: 'uuid' })
+  @Column({ name: 'role_id', type: 'uuid' })
   roleId: string;
 
   // Which menu. Part 2 of the PK.
-  @PrimaryColumn({ name: 'menu_id', type: 'uuid' })
+  @Column({ name: 'menu_id', type: 'uuid' })
   menuId: string;
 
   // Which action. Part 3 of the PK.
   // One of: CREATE, READ, UPDATE, DELETE.
-  @PrimaryColumn({ name: 'action', type: 'varchar', length: 20 })
+  @Column({ name: 'action', type: 'varchar', length: 20 })
   action: string;
 
   // ─── Payload ──────────────────────────────────────────

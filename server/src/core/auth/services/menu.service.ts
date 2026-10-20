@@ -5,10 +5,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 
 import { AuthorizationService } from './authorization.service';
-import { Menu } from '../entities/menu.entity';
 import { MenuSection } from '../entities/menu-section.entity';
 import { CompanyMenu } from '../entities/company-menu.entity';
 import { CreateMenuDto } from '../dto/create-menu.dto';
+import { Menu } from '../entities/menu.entity';
 
 @Injectable()
 export class MenusService {
