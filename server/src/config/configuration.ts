@@ -11,13 +11,12 @@ export default () => ({
   database: {
     host: process.env.DB_HOST ?? 'localhost',
     port: parseInt(process.env.DB_PORT ?? '5432', 10),
-    username: process.env.DB_USERNAME ?? 'postgres',
+    username: process.env.DB_USERNAME ?? '',
     password: process.env.DB_PASSWORD ?? '',
-    name: process.env.DB_NAME ?? 'saas_field_service_db',
+    name: process.env.DB_NAME ?? '',
     logging: process.env.DB_LOGGING === 'true',
-    synchronize: process.env.DB_SYNCHRONIZE === 'true', // false in production
   },
-
+  
   jwt: {
     // Staff / ERP auth secrets
     staffAccessSecret: process.env.JWT_ACCESS_SECRET ?? 'change-me-staff-secret',
