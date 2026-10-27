@@ -22,6 +22,8 @@ import { FilesModule } from './core/files/files.module';
 import { CustomerAuthModule } from './core/customer-auth/customer-auth.module';
 
 import { RequestLoggerMiddleware } from './middleware/logger/logger.middleware';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -47,6 +49,33 @@ import { RequestLoggerMiddleware } from './middleware/logger/logger.middleware';
     AuditModule,
     FilesModule,
     CustomerAuthModule,
+
+    ThrottlerModule.forRoot({
+      throttlers: [
+        {
+          name: 'short',
+          ttl: 1000,
+          limit: 5,
+        },
+        {
+          name: 'mediun',
+          ttl: 10000,
+          limit: 5,
+        },
+        {
+          name: 'long',
+          ttl: 60000,
+          limit: 100,
+        },
+      ],
+      errorMessage: 'Too many requests. Please try again later.',
+    }),
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
   ],
 })
 export class AppModule implements NestModule {

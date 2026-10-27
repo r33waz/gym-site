@@ -9,6 +9,7 @@ import { ConfigService } from '@nestjs/config';
 import { ACCESS_TOKEN_COOKIE, REFRESH_TOKEN_COOKIE } from '../../constant/index';
 import { SignupDto, UserQueryDto } from './dto/create-auth.dto';
 import { UserResponseDto } from './dto/user-response.dto';
+import { Throttle } from '@nestjs/throttler';
 
 @Injectable()
 export class AuthService {
