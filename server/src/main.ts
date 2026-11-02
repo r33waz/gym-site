@@ -4,8 +4,8 @@ import { ConfigService } from '@nestjs/config';
 import cookieParser from 'cookie-parser';
 
 import { AppModule } from './app.module';
-import { HttpExceptionFilter } from './filters/http-exception.filter';
-import { ResponseTransformInterceptor } from './interceptor/transform.interceptor';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { ResponseTransformInterceptor } from './common/interceptor/transform.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
