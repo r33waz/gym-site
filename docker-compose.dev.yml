@@ -1,0 +1,116 @@
+
+services:
+  # PostgreSQL database service
+  postgres:
+    image: postgres:16-alpine
+    container_name: dev-database
+    restart: unless-stopped
+
+    # PostgreSQL initialization environment
+    env_file:
+      - ./server/.env.development
+
+    # Host access for pgAdmin or local database clients
+    ports:
+      - "5432:5432"
+
+    # Persistent database storage
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    # PostgreSQL readiness check
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+    networks:
+      - service-project
+
+  # NestJS backend service
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.dev
+
+    container_name: service-project-backend
+    restart: unless-stopped
+
+    # Backend environment variables
+    env_file:
+      - ./server/.env.development
+
+    ports:
+      - "8000:8000"
+
+    # Source code and dependency volumes
+    volumes:
+      - ./server:/app
+      - backend_node_modules:/app/node_modules
+
+    # Wait until PostgreSQL is healthy
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    networks:
+      - service-project
+
+  # React frontend service
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+
+    container_name: service-project-frontend
+    restart: unless-stopped
+
+    # Frontend environment variables
+    env_file:
+      - ./frontend/.env.development
+
+    ports:
+      - "5173:5173"
+
+    # Source code and dependency volumes
+    volumes:
+      - ./frontend:/app
+      - frontend_node_modules:/app/node_modules
+
+    networks:
+      - service-project
+
+  # Nginx reverse proxy service
+  nginx:
+    image: nginx:alpine
+    container_name: service-project-nginx
+    restart: unless-stopped
+
+    ports:
+      - "8080:80"
+
+    # Mount Nginx configuration as read-only
+    volumes:
+      - ./nginx/nginx.dev.conf:/etc/nginx/conf.d/default.conf:ro
+
+    depends_on:
+      - frontend
+      - backend
+
+    networks:
+      - service-project
+
+# Named Docker volumes
+volumes:
+  postgres_data:
+  backend_node_modules:
+  frontend_node_modules:
+
+# Shared Docker network
+networks:
+  service-project:
+    driver: bridge
