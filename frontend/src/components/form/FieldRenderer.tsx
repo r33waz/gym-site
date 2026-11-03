@@ -10,17 +10,21 @@ import {
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
+
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+
 import { Calendar } from "@/components/ui/calendar";
+
 import {
   Command,
   CommandEmpty,
@@ -29,7 +33,9 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+
 import { Badge } from "@/components/ui/badge";
+
 import type { FieldConfig } from "./types";
 import type { ControllerRenderProps, FieldValues } from "react-hook-form";
 
@@ -42,10 +48,6 @@ export const FormFieldsRenderer: React.FC<RendererProps> = ({
   config,
   fieldProps,
 }) => {
-  // All hooks declared unconditionally at the top level — previously
-  // `showPassword` was declared inside `case "password":`, which is a
-  // conditional hook call (breaks Rules of Hooks) since it only runs
-  // when config.type === "password".
   const [openSelect, setOpenSelect] = React.useState(false);
   const [openMulti, setOpenMulti] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
@@ -57,6 +59,7 @@ export const FormFieldsRenderer: React.FC<RendererProps> = ({
           placeholder={config.placeholder}
           {...fieldProps}
           value={fieldProps.value ?? ""}
+          disabled={config.disable}
         />
       );
 
@@ -69,12 +72,14 @@ export const FormFieldsRenderer: React.FC<RendererProps> = ({
             {...fieldProps}
             value={fieldProps.value ?? ""}
             className="pr-12"
+            disabled={config.disable}
           />
 
           <button
             type="button"
             onClick={() => setShowPassword((prev) => !prev)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 flex h-8 w-8 items-center justify-center text-muted-foreground hover:text-foreground"
+            disabled={config.disable}
+            className="absolute right-3 top-1/2 -translate-y-1/2 flex h-8 w-8 items-center justify-center text-muted-foreground hover:text-foreground disabled:pointer-events-none disabled:opacity-50"
             aria-label={showPassword ? "Hide password" : "Show password"}
           >
             {showPassword ? <Eye size={16} /> : <EyeClosed size={16} />}
@@ -88,6 +93,7 @@ export const FormFieldsRenderer: React.FC<RendererProps> = ({
           placeholder={config.placeholder}
           {...fieldProps}
           value={fieldProps.value ?? ""}
+          disabled={config.disable}
         />
       );
 
@@ -97,13 +103,16 @@ export const FormFieldsRenderer: React.FC<RendererProps> = ({
           onValueChange={fieldProps.onChange}
           value={fieldProps.value ?? ""}
           className="flex flex-col space-y-2 mt-1"
+          disabled={config.disable}
         >
           {config.options?.map((opt) => (
             <div key={opt.value} className="flex items-center space-x-2">
               <RadioGroupItem
                 value={opt.value}
                 id={`${config.name}-${opt.value}`}
+                disabled={config.disable}
               />
+
               <label
                 htmlFor={`${config.name}-${opt.value}`}
                 className="text-sm font-normal cursor-pointer text-foreground"
@@ -118,8 +127,9 @@ export const FormFieldsRenderer: React.FC<RendererProps> = ({
     case "date":
       return (
         <Popover>
-          <PopoverTrigger asChild>
+          <PopoverTrigger asChild disabled={config.disable}>
             <Button
+              type="button"
               variant="outline"
               className={cn(
                 "w-full justify-start text-left font-normal",
@@ -127,6 +137,7 @@ export const FormFieldsRenderer: React.FC<RendererProps> = ({
               )}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
+
               {fieldProps.value ? (
                 format(new Date(fieldProps.value), "PPP")
               ) : (
@@ -134,6 +145,7 @@ export const FormFieldsRenderer: React.FC<RendererProps> = ({
               )}
             </Button>
           </PopoverTrigger>
+
           <PopoverContent className="w-auto p-0" align="start">
             <Calendar
               mode="single"
@@ -149,12 +161,12 @@ export const FormFieldsRenderer: React.FC<RendererProps> = ({
         </Popover>
       );
 
-    // SEARCHABLE SINGLE DROPDOWN (COMBOBOX)
     case "select":
       return (
         <Popover open={openSelect} onOpenChange={setOpenSelect}>
-          <PopoverTrigger asChild>
+          <PopoverTrigger asChild disabled={config.disable}>
             <Button
+              type="button"
               variant="outline"
               role="combobox"
               aria-expanded={openSelect}
@@ -190,10 +202,12 @@ export const FormFieldsRenderer: React.FC<RendererProps> = ({
                     <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
                   </span>
                 )}
+
                 <ChevronsUpDown className="h-4 w-4 opacity-50" />
               </span>
             </Button>
           </PopoverTrigger>
+
           <PopoverContent
             className="w-(--radix-popover-trigger-width) p-0"
             align="start"
@@ -204,8 +218,10 @@ export const FormFieldsRenderer: React.FC<RendererProps> = ({
               }
             >
               <CommandInput placeholder="Search options..." />
+
               <CommandList>
                 <CommandEmpty>No results found.</CommandEmpty>
+
                 <CommandGroup>
                   {config.options?.map((opt) => (
                     <CommandItem
@@ -224,6 +240,7 @@ export const FormFieldsRenderer: React.FC<RendererProps> = ({
                             : "opacity-0",
                         )}
                       />
+
                       {opt.label}
                     </CommandItem>
                   ))}
@@ -234,7 +251,6 @@ export const FormFieldsRenderer: React.FC<RendererProps> = ({
         </Popover>
       );
 
-    // SEARCHABLE MULTI-SELECT DROPDOWN WITH BADGES
     case "multi-select": {
       const selectedValues: string[] = Array.isArray(fieldProps.value)
         ? fieldProps.value
@@ -251,8 +267,9 @@ export const FormFieldsRenderer: React.FC<RendererProps> = ({
       return (
         <div className="flex flex-col gap-2 w-full">
           <Popover open={openMulti} onOpenChange={setOpenMulti}>
-            <PopoverTrigger asChild>
+            <PopoverTrigger asChild disabled={config.disable}>
               <Button
+                type="button"
                 variant="outline"
                 role="combobox"
                 aria-expanded={openMulti}
@@ -263,9 +280,11 @@ export const FormFieldsRenderer: React.FC<RendererProps> = ({
                     ? `${selectedValues.length} selected`
                     : config.placeholder || "Select choices..."}
                 </span>
+
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
+
             <PopoverContent
               className="w-(--radix-popover-trigger-width) p-0"
               align="start"
@@ -276,11 +295,14 @@ export const FormFieldsRenderer: React.FC<RendererProps> = ({
                 }
               >
                 <CommandInput placeholder="Type to filter..." />
+
                 <CommandList>
                   <CommandEmpty>No matching entries.</CommandEmpty>
+
                   <CommandGroup>
                     {config.options?.map((opt) => {
                       const isSelected = selectedValues.includes(opt.value);
+
                       return (
                         <CommandItem
                           key={opt.value}
@@ -297,6 +319,7 @@ export const FormFieldsRenderer: React.FC<RendererProps> = ({
                           >
                             {isSelected && <Check className="h-3 w-3" />}
                           </div>
+
                           {opt.label}
                         </CommandItem>
                       );
@@ -311,7 +334,9 @@ export const FormFieldsRenderer: React.FC<RendererProps> = ({
             <div className="flex flex-wrap gap-1 mt-1 p-2 border rounded-md max-h-24 overflow-y-auto bg-muted/30">
               {selectedValues.map((val) => {
                 const label =
-                  config.options?.find((o) => o.value === val)?.label || val;
+                  config.options?.find((option) => option.value === val)
+                    ?.label || val;
+
                 return (
                   <Badge
                     key={val}
@@ -319,6 +344,7 @@ export const FormFieldsRenderer: React.FC<RendererProps> = ({
                     className="flex items-center gap-1"
                   >
                     {label}
+
                     <button
                       type="button"
                       className="rounded-full outline-none p-0.5 hover:bg-muted"
@@ -335,10 +361,30 @@ export const FormFieldsRenderer: React.FC<RendererProps> = ({
       );
     }
 
+    case "checkbox-single":
+      return (
+        <div className="flex items-center space-x-2 mt-1">
+          <Checkbox
+            id={config.name}
+            checked={Boolean(fieldProps.value)}
+            disabled={config.disable}
+            onCheckedChange={fieldProps.onChange}
+          />
+
+          <label
+            htmlFor={config.name}
+            className="text-sm font-normal cursor-pointer text-foreground"
+          >
+            {config.label}
+          </label>
+        </div>
+      );
+
     case "checkbox-group": {
       const currentSelection: string[] = Array.isArray(fieldProps.value)
         ? fieldProps.value
         : [];
+
       return (
         <div className="space-y-2 mt-1">
           {config.options?.map((opt) => (
@@ -346,6 +392,7 @@ export const FormFieldsRenderer: React.FC<RendererProps> = ({
               <Checkbox
                 id={`${config.name}-${opt.value}`}
                 checked={currentSelection.includes(opt.value)}
+                disabled={config.disable}
                 onCheckedChange={(checked) => {
                   if (checked) {
                     fieldProps.onChange([...currentSelection, opt.value]);
@@ -356,6 +403,7 @@ export const FormFieldsRenderer: React.FC<RendererProps> = ({
                   }
                 }}
               />
+
               <label
                 htmlFor={`${config.name}-${opt.value}`}
                 className="text-sm font-normal cursor-pointer text-foreground"

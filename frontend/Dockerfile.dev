@@ -1,0 +1,22 @@
+# Base image with the node 
+FROM node:24-alpine
+
+# Working directory
+WORKDIR /app
+
+# copy dependency files
+COPY  package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# copy source code
+COPY . .
+
+#Expose vite port 
+EXPOSE 5173
+
+
+# 7. Start development server
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+

@@ -1,14 +1,10 @@
 import * as React from "react";
 import {
-  useForm,
   type ControllerRenderProps,
-  type DefaultValues,
   type FieldValues,
   type Path,
-  type Resolver,
+  type UseFormReturn,
 } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import type { ObjectSchema } from "yup";
 
 import {
   Form,
@@ -20,6 +16,7 @@ import {
 } from "@/components/ui/form";
 
 import { Button, type ButtonProps } from "@/components/ui/button";
+
 import { cn } from "@/lib/utils";
 
 import type { FieldConfig } from "./types";
@@ -27,8 +24,8 @@ import { FormFieldsRenderer } from "./FieldRenderer";
 
 interface DynamicFormProps<T extends FieldValues> {
   config: FieldConfig[];
-  validationSchema: ObjectSchema<any>;
-  onSubmit: (data: T) => void;
+  form: UseFormReturn<T>;
+  onSubmit: (data: T) => void | Promise<void>;
   submitButtonText?: string;
   cancelButtonText?: string;
   btnclass?: string;
@@ -50,34 +47,15 @@ const FULL_WIDTH_TYPES = new Set(["textarea", "checkbox-group"]);
 
 export function DynamicForm<T extends FieldValues>({
   config,
-  validationSchema,
+  form,
   onSubmit,
   submitButtonText = "Submit",
   cancelButtonText = "Cancel",
   btnclass,
+  loading = false,
   btnVariant,
-  loading,
   onCancel,
 }: DynamicFormProps<T>) {
-  const configKey = React.useMemo(() => JSON.stringify(config), [config]);
-
-  const defaultValues = React.useMemo(() => {
-    return config.reduce<Record<string, unknown>>((acc, field) => {
-      acc[field.name] = field.initialValue;
-      return acc;
-    }, {});
-  }, [configKey]);
-
-  const form = useForm<T>({
-    resolver: yupResolver(validationSchema) as unknown as Resolver<T>,
-    defaultValues: defaultValues as DefaultValues<T>,
-    mode: "onSubmit",
-  });
-
-  React.useEffect(() => {
-    form.reset(defaultValues as DefaultValues<T>);
-  }, [configKey]);
-
   return (
     <Form {...form}>
       <form
@@ -95,6 +73,7 @@ export function DynamicForm<T extends FieldValues>({
                 key={`${field.name}-${index}`}
                 control={form.control}
                 name={field.name as Path<T>}
+                disabled={field.disable}
                 render={({ field: renderProps }) => (
                   <FormItem className={cn("flex flex-col gap-1.5", spanClass)}>
                     <FormLabel className="text-sm font-normal">
