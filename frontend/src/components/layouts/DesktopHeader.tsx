@@ -1,7 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { LogIn, UserPlus } from "lucide-react";
 import { Button } from "../ui/button";
-import { privateRoutePath, publicRoutePath } from "@/routes/path";
 import Logo from "@/assets/Images/Gemini_Generated_Image_elp71melp71melp7.png";
 import LanguageTrans from "../common/LanguageTrans";
 import { useTranslation } from "react-i18next";
@@ -12,7 +11,7 @@ const DesktopHeader = () => {
 
   return (
     <div className="flex justify-between flex-wrap py-2">
-      <Link to={privateRoutePath.base}>
+      <Link to={""}>
         <img src={Logo} alt="Logo" className="w-12 h-10" />
       </Link>
       <div className="flex items-center gap-2">
@@ -20,7 +19,7 @@ const DesktopHeader = () => {
 
         <Button
           variant="outline"
-          onClick={() => navigate(publicRoutePath.login)}
+          onClick={() => navigate("")}
           className={`
             gap-2 border-2 border-primary/30 text-primary
             hover:border-primary hover:bg-primary/5 hover:text-primary
@@ -34,7 +33,7 @@ const DesktopHeader = () => {
         </Button>
 
         <Button
-          onClick={() => navigate(publicRoutePath.signup)}
+          onClick={() => navigate("")}
           className={`
     gap-2 border-2 font-medium
     border-green-primary/20 dark:border-green-primary/30
