@@ -1,0 +1,115 @@
+
+# Name displayed in the GitHub Actions tab
+name: Development CI
+
+# ==========================================================
+# WORKFLOW TRIGGERS
+# Run when code is pushed or a pull request targets dev.
+# ==========================================================
+on:
+  push:
+    branches:
+      - dev
+
+  pull_request:
+    branches:
+      - dev
+
+# ==========================================================
+# PERMISSIONS
+# Give the GitHub Actions token read-only repository access.
+# ==========================================================
+permissions:
+  contents: read
+
+# ==========================================================
+# JOBS
+# Define the tasks that GitHub Actions will execute.
+# ==========================================================
+jobs:
+
+  # --------------------------------------------------------
+  # JOB: DOCKER BUILD
+  # --------------------------------------------------------
+  docker-build:
+
+    # Display name of this job
+    name: Test and Build Docker Images
+
+    # Use GitHub-hosted Ubuntu runner
+    runs-on: ubuntu-latest
+
+    # ------------------------------------------------------
+    # STEPS
+    # Execute each step sequentially.
+    # ------------------------------------------------------
+    steps:
+
+      # STEP 1: Download repository source code
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+
+      # STEP 2: Install Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      # STEP 3: Install pnpm
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      # STEP 4: Verify installed tools
+      - name: Check Tool Versions
+        run: |
+          node --version
+          pnpm --version
+          docker --version
+          docker compose version
+
+      # ====================================================
+      # BACKEND TESTS - NESTJS
+      # ====================================================
+
+      # STEP 5: Install backend dependencies
+      - name: Install Backend Dependencies
+        working-directory: ./server
+        run: pnpm install --frozen-lockfile
+
+      # STEP 6: Run backend Jest tests
+      - name: Run Backend Tests
+        working-directory: ./server
+        run: pnpm test -- --runInBand
+
+      # ====================================================
+      # FRONTEND TESTS - REACT
+      # ====================================================
+
+      # STEP 7: Install frontend dependencies
+      - name: Install Frontend Dependencies
+        working-directory: ./frontend
+        run: pnpm install --frozen-lockfile
+
+      # STEP 8: Run frontend Vitest tests
+      - name: Run Frontend Tests
+        working-directory: ./frontend
+        run: pnpm test -- --run
+
+      # ====================================================
+      # DOCKER IMAGE BUILD
+      # ====================================================
+
+      # STEP 9: Create environment files required by Compose
+      - name: Prepare Environment Files
+        run: |
+          mkdir -p docker
+          touch docker/.env.development
+          touch server/.env.development
+          touch frontend/.env.development
+
+      # STEP 10: Build Docker images
+      - name: Build Docker Images
+        run: |
+          docker compose -f docker-compose.dev.yml build
