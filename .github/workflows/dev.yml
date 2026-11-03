@@ -1,7 +1,5 @@
-
 name: Development CI
 
-# Trigger on push or pull request targeting dev.
 "on":
   push:
     branches:
@@ -11,33 +9,32 @@ name: Development CI
     branches:
       - dev
 
-# Read-only repository permission.
 permissions:
   contents: read
 
 jobs:
   docker-build:
-    name: Test and Build Docker Images
+    name: Test and Build Applications
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout repository.
+      # 1. Checkout repository
       - name: Checkout Repository
         uses: actions/checkout@v7
 
-      # Step 2: Setup Node.js.
+      # 2. Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 24
 
-      # Step 3: Setup pnpm.
+      # 3. Setup pnpm
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 10
 
-      # Step 4: Check installed tools.
+      # 4. Check versions
       - name: Check Tool Versions
         run: |
           node --version
@@ -45,17 +42,32 @@ jobs:
           docker --version
           docker compose version
 
-      # Step 5: Install backend dependencies.
+      # 5. Install backend dependencies
       - name: Install Backend Dependencies
         working-directory: ./server
         run: pnpm install --frozen-lockfile
 
-      # Step 6: Run backend Jest tests.
+      # 6. Install frontend dependencies
+      - name: Install Frontend Dependencies
+        working-directory: ./frontend
+        run: pnpm install --frozen-lockfile
+
+      # 7. Run backend tests
       - name: Run Backend Tests
         working-directory: ./server
         run: pnpm exec jest --runInBand --passWithNoTests
 
-      # Step 7: Prepare environment files.
+      # 8. Build backend application
+      - name: Build Backend
+        working-directory: ./server
+        run: pnpm build
+
+      # 9. Build frontend application
+      - name: Build Frontend
+        working-directory: ./frontend
+        run: pnpm build
+
+      # 10. Prepare environment files
       - name: Prepare Environment Files
         run: |
           mkdir -p docker
@@ -63,6 +75,6 @@ jobs:
           touch server/.env.development
           touch frontend/.env.development
 
-      # Step 8: Build Docker images.
+      # 11. Build Docker images
       - name: Build Docker Images
         run: docker compose -f docker-compose.dev.yml build
