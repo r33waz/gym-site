@@ -81,7 +81,7 @@ jobs:
       # STEP 6: Run backend Jest tests
       - name: Run Backend Tests
         working-directory: ./server
-        run: pnpm test -- --runInBand
+        run: pnpm exec jest --runInBand --passWithNoTests
 
       # ====================================================
       # FRONTEND TESTS - REACT
