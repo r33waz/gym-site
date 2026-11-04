@@ -3,11 +3,11 @@ name: Development CI
 "on":
   push:
     branches:
-      - dev
+      - development
 
   pull_request:
     branches:
-      - dev
+      - development
 
 permissions:
   contents: read
