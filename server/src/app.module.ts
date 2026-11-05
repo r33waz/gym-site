@@ -7,6 +7,7 @@ import { configService } from './config/database/database.config';
 import { RequestLoggerMiddleware } from './middleware/logger/logger.middleware';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { AuthModule } from './module/auth/auth.module';
 
 @Module({
   imports: [
@@ -37,6 +38,8 @@ import { APP_GUARD } from '@nestjs/core';
       ],
       errorMessage: 'Too many requests. Please try again later.',
     }),
+
+    AuthModule,
   ],
   providers: [
     {

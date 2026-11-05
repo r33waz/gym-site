@@ -18,12 +18,6 @@ export const Permission = (props: IPermissionProps) => {
     return null; // Render nothing while auth state is being resolved
   }
 
-  const hasRoleAccess =
-    roles.length > 0 && roles.includes(userInfo?.role as ROLEENUM); // Check if user's role is in the allowed list
-
-  if (!hasRoleAccess) {
-    return <PageNotFound />; // Block access and show 404 if role doesn't match
-  }
 
   return (
     <>
