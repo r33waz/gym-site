@@ -1,0 +1,80 @@
+name: Development CI
+
+"on":
+  push:
+    branches:
+      - development
+
+  pull_request:
+    branches:
+      - development
+
+permissions:
+  contents: read
+
+jobs:
+  docker-build:
+    name: Test and Build Applications
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout repository
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+
+      # 2. Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      # 3. Setup pnpm
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      # 4. Check versions
+      - name: Check Tool Versions
+        run: |
+          node --version
+          pnpm --version
+          docker --version
+          docker compose version
+
+      # 5. Install backend dependencies
+      - name: Install Backend Dependencies
+        working-directory: ./server
+        run: pnpm install --frozen-lockfile
+
+      # 6. Install frontend dependencies
+      - name: Install Frontend Dependencies
+        working-directory: ./frontend
+        run: pnpm install --frozen-lockfile
+
+      # 7. Run backend tests
+      - name: Run Backend Tests
+        working-directory: ./server
+        run: pnpm exec jest --runInBand --passWithNoTests
+
+      # 8. Build backend application
+      - name: Build Backend
+        working-directory: ./server
+        run: pnpm build
+
+      # 9. Build frontend application
+      - name: Build Frontend
+        working-directory: ./frontend
+        run: pnpm build
+
+      # 10. Prepare environment files
+      - name: Prepare Environment Files
+        run: |
+          mkdir -p docker
+          touch docker/.env.development
+          touch server/.env.development
+          touch frontend/.env.development
+
+      # 11. Build Docker images
+      - name: Build Docker Images
+        run: docker compose -f docker-compose.dev.yml build

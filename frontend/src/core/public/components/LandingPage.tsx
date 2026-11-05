@@ -15,7 +15,6 @@ import {
 import { publicRoutePath } from "@/routes/path";
 
 const LandingPage = () => {
-  const { t } = useTranslation();
 
   const features = [
     {

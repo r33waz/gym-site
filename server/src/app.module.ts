@@ -1,46 +1,58 @@
-import { Module } from '@nestjs/common';
-import { AuthModule } from './core/auth/auth.module';
-import { CompaniesModule } from './core/companies/companies.module';
-import { EmployeesModule } from './core/employees/employees.module';
-import { CustomersModule } from './core/customers/customers.module';
-import { CatalogModule } from './core/catalog/catalog.module';
-import { BookingsModule } from './core/bookings/bookings.module';
-import { JobsModule } from './core/jobs/jobs.module';
-import { AttendanceModule } from './core/attendance/attendance.module';
-import { BillingModule } from './core/billing/billing.module';
-import { PayrollModule } from './core/payroll/payroll.module';
-import { ReviewsModule } from './core/reviews/reviews.module';
-import { NotificationsModule } from './core/notifications/notifications.module';
-import { SubscriptionsModule } from './core/subscriptions/subscriptions.module';
-import { AuditModule } from './core/audit/audit.module';
-import { FilesModule } from './core/files/files.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { configService } from './config/database/database.config';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+import configuration from './config/configuration';
+import { configService } from './config/database/database.config';
+import { RequestLoggerMiddleware } from './middleware/logger/logger.middleware';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthModule } from './module/auth/auth.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      load: [configuration],
     }),
+
     TypeOrmModule.forRootAsync(configService),
+
+    ThrottlerModule.forRoot({
+      throttlers: [
+        {
+          name: 'short',
+          ttl: 1000,
+          limit: 5,
+        },
+        {
+          name: 'mediun',
+          ttl: 10000,
+          limit: 5,
+        },
+        {
+          name: 'long',
+          ttl: 60000,
+          limit: 100,
+        },
+      ],
+      errorMessage: 'Too many requests. Please try again later.',
+    }),
+
     AuthModule,
-    CompaniesModule,
-    EmployeesModule,
-    CustomersModule,
-    CatalogModule,
-    BookingsModule,
-    JobsModule,
-    AttendanceModule,
-    BillingModule,
-    PayrollModule,
-    ReviewsModule,
-    NotificationsModule,
-    SubscriptionsModule,
-    AuditModule,
-    FilesModule,
   ],
-  controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(RequestLoggerMiddleware).forRoutes({
+      path: '*path',
+      method: RequestMethod.ALL,
+    });
+  }
+}

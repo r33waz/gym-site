@@ -1,45 +1,12 @@
-import type { ILoginInterface } from "@/interface/auth.interface";
-import { useLogin } from "@/service/auth/auth.service";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext} from "react";
 
-type AuthContextType = {
-  userInfo: any;
-  login: (payload: ILoginInterface) => Promise<any>;
-  logout: () => void;
-  isLoading: boolean;
-};
-
-const AuthContext = createContext<AuthContextType | null>(null);
+const AuthContext = createContext<null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUserInfo] = useState(null);
 
-  const loginMutation = useLogin();
 
-  const login = async (payload: ILoginInterface) => {
-    const res = await loginMutation.mutateAsync(payload);
 
-    setUserInfo(res?.data);
-
-    return res;
-  };
-
-  const logout = () => {
-    setUserInfo(null);
-  };
-
-  return (
-    <AuthContext.Provider
-      value={{
-        userInfo: user,
-        login,
-        logout,
-        isLoading: loginMutation.isPending,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={null}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

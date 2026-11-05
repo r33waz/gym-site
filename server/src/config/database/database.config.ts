@@ -2,76 +2,82 @@ import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
 import { join } from 'path';
 import { DataSource } from 'typeorm';
+import * as dotenv from 'dotenv';
 
-// Ensure env vars are available for TypeORM CLI (migration:generate, etc.)
-// NOTE: dotenv should be installed if you want to load .env at runtime.
-const dotenv = require('dotenv');
-dotenv.config();
+dotenv.config({
+  path: `.env.${process.env.NODE_ENV ?? 'development'}`,
+});
 
-// This glob must match actual filesystem locations so TypeORM can build relation metadata.
 const entitiesPath = join(__dirname, '..', '..', 'core', '**', 'entities', '*.entity.{ts,js}');
 
 const migrationsPath = join(__dirname, '..', '..', 'migrations', '*.{ts,js}');
-/**
- * Database Configuration
- *
- * Entity Pattern: Looks for all .entity.ts files in libs/database/src/entities/
- * Migration Pattern: Looks for all migration files in libs/database/src/lib/migrations/
- *
- * All entities must be placed in libs/database/src/entities/ and exported from entities/index.ts
- * All migrations must be placed in libs/database/src/lib/migrations/
- */
+
+function getRequiredEnv(name: string): string {
+  const value = process.env[name];
+
+  if (typeof value !== 'string' || value.trim() === '') {
+    throw new Error(`Missing required environment variable: ${name}`);
+  }
+
+  return value;
+}
+
+function getDatabaseConfig(config: ConfigService) {
+  const password = config.get<string>('database.password');
+
+  if (typeof password !== 'string' || password.length === 0) {
+    throw new Error('Database password is missing. Check your environment configuration.');
+  }
+
+  return {
+    host: config.getOrThrow<string>('database.host'),
+    port: config.getOrThrow<number>('database.port'),
+    username: config.getOrThrow<string>('database.username'),
+    password,
+    database: config.getOrThrow<string>('database.name'),
+  };
+}
+
 export const configService: TypeOrmModuleAsyncOptions = {
   inject: [ConfigService],
-  useFactory: (configService: ConfigService) => {
-    const config = {
-      host: configService.get<string>('DB_HOST'),
-      port: configService.get<number>('DB_PORT'),
-      username: configService.get<string>('DB_USERNAME'),
-      password: configService.get<string>('DB_PASSWORD'),
-      database: configService.get<string>('DB_NAME'),
-      nodeEnv: configService.get<string>('NODE_ENV'),
-    };
 
-    console.log('🔥 DATABASE CONFIG LOADED:');
-    console.table(config);
+  useFactory: (config: ConfigService) => {
+    const database = getDatabaseConfig(config);
+
+    console.log('Database configuration loaded:', {
+      host: database.host,
+      port: database.port,
+      username: database.username,
+      database: database.database,
+      passwordDefined: true,
+      passwordType: typeof database.password,
+      nodeEnv: config.get<string>('app.env'),
+    });
 
     return {
       type: 'postgres',
-      host: config.host,
-      port: config.port,
-      username: config.username,
-      password: config.password,
-      database: config.database,
-
+      ...database,
       entities: [entitiesPath],
-      // migrationsTableName: 'migrations',
       migrations: [migrationsPath],
-
+      migrationsTableName: 'migrations',
       autoLoadEntities: true,
-      synchronize: true, // Always false for production
-      migrationsRun: false, // Auto-run migrations on app startup
-      logging: false,
+      synchronize: false,
+      migrationsRun: false,
+      logging: config.get<boolean>('database.logging', false),
     };
   },
 };
 
-/**
- * DataSource for TypeORM CLI migrations
- * Used for: typeorm migration:create, typeorm migration:run, etc.
- */
 export default new DataSource({
   type: 'postgres',
-  host: process.env.DB_HOST,
-  port: Number(process.env.DB_PORT),
-  username: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-
+  host: getRequiredEnv('DB_HOST'),
+  port: Number(getRequiredEnv('DB_PORT')),
+  username: getRequiredEnv('DB_USERNAME'),
+  password: getRequiredEnv('DB_PASSWORD'),
+  database: getRequiredEnv('DB_NAME'),
   entities: [entitiesPath],
   migrationsTableName: 'migrations',
   migrations: [migrationsPath],
-
-  synchronize: false, // ALWAYS false for production
+  synchronize: false,
   logging: process.env.NODE_ENV !== 'production',
 });
