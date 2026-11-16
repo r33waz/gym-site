@@ -12,7 +12,6 @@ import {
   CheckCircle2,
   ArrowRight,
 } from "lucide-react";
-import { publicRoutePath } from "@/routes/path";
 
 const LandingPage = () => {
 
@@ -97,7 +96,7 @@ const LandingPage = () => {
 
           <div className="flex items-center justify-center gap-4 flex-wrap">
             <Link
-              to={publicRoutePath.signup}
+              to=""
               className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary-hover transition-colors font-poppins btn-glow"
             >
               {getTextByLanguage(
@@ -107,7 +106,7 @@ const LandingPage = () => {
               <ArrowRight size={16} />
             </Link>
             <Link
-              to={publicRoutePath.login}
+              to=""
               className="inline-flex items-center gap-2 px-6 py-3 bg-transparent border border-border rounded-lg text-sm font-medium hover:bg-accent transition-colors font-poppins"
             >
               {getTextByLanguage("Log In", "लग इन")}
@@ -183,7 +182,7 @@ const LandingPage = () => {
             )}
           </p>
           <Link
-            to={publicRoutePath.signup}
+            to=""
             className="inline-flex items-center gap-2 px-6 py-3 bg-white text-primary-dark rounded-lg text-sm font-semibold hover:bg-white/90 transition-colors font-poppins"
           >
             {getTextByLanguage(
