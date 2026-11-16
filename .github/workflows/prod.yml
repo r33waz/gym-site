@@ -1,84 +1,156 @@
-name: Development CI
 
-"on":
+name: Production CI/CD
+
+# Run when code is pushed to the production branch.
+on:
   push:
     branches:
       - main
 
-  pull_request:
-    branches:
-      - main
+  # Allow manual production deployment.
+  workflow_dispatch:
+
+# Prevent simultaneous production deployments.
+concurrency:
+  group: production
+  cancel-in-progress: false
 
 permissions:
   contents: read
 
 jobs:
-  docker-build:
-    name: Test and Build Applications
+
+  # ==========================================
+  # JOB 1: INSTALL AND BUILD BOTH APPLICATIONS
+  # ==========================================
+  validate:
+    name: Install and Build
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout repository
+
+      # Checkout repository.
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # 2. Setup Node.js
+      # Install pnpm.
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
+
+      # Install Node.js.
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: pnpm
           cache-dependency-path: |
-            server/pnpm-lock.yaml
             frontend/pnpm-lock.yaml
+            server/pnpm-lock.yaml
 
-      # 3. Setup pnpm
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
-
-      # 4. Check versions
-      - name: Check Tool Versions
-        run: |
-          node --version
-          pnpm --version
-          docker --version
-          docker compose version
-
-      # 5. Install backend dependencies
-      - name: Install Backend Dependencies
-        working-directory: ./server
-        run: pnpm install --frozen-lockfile
-
-      # 6. Install frontend dependencies
+      # Install frontend dependencies.
       - name: Install Frontend Dependencies
-        working-directory: ./frontend
+        working-directory: frontend
         run: pnpm install --frozen-lockfile
 
-      # 7. Run backend tests
-      - name: Run Backend Tests
-        working-directory: ./server
-        run: pnpm exec jest --runInBand --passWithNoTests
+      # Install backend dependencies.
+      - name: Install Backend Dependencies
+        working-directory: server
+        run: pnpm install --frozen-lockfile
 
-      # 8. Build backend
-      - name: Build Backend
-        working-directory: ./server
-        run: pnpm build
-
-      # 9. Build frontend
+      # Build frontend.
       - name: Build Frontend
-        working-directory: ./frontend
+        working-directory: frontend
+        env:
+          VITE_API_URL: ${{ vars.VITE_API_BASE_URL }}
+        run: pnpm build:prod
+
+      # Build backend.
+      - name: Build Backend
+        working-directory: server
         run: pnpm build
 
-      # 10. Prepare environment files
-      - name: Prepare Environment Files
-        run: |
-          mkdir -p docker
-          touch docker/.env.development
-          touch server/.env.development
-          touch frontend/.env.development
+  # ==========================================
+  # JOB 2: DEPLOY FRONTEND TO VERCEL
+  # Runs ONLY when validation succeeds.
+  # ==========================================
+  deploy-frontend:
+    name: Deploy Frontend to Vercel
+    runs-on: ubuntu-latest
+    needs: validate
 
-      # 11. Build Docker images
-      - name: Build Docker Images
-        run: docker compose -f docker-compose.dev.yml build
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      # Install Vercel CLI.
+      - name: Install Vercel CLI
+        run: npm install --global vercel
+
+      # Pull production Vercel configuration.
+      - name: Pull Vercel Configuration
+        working-directory: frontend
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          set -euo pipefail
+          vercel pull \
+            --yes \
+            --environment=production \
+            --token="$VERCEL_TOKEN"
+
+      # Build frontend using Vercel production environment.
+      - name: Build for Production
+        working-directory: frontend
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          set -euo pipefail
+          vercel build --prod --token="$VERCEL_TOKEN"
+
+      # Deploy the prebuilt frontend.
+      - name: Deploy to Vercel
+        working-directory: frontend
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          set -euo pipefail
+          vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN"
+
+  # ==========================================
+  # JOB 3: DEPLOY BACKEND TO RENDER
+  # Runs ONLY when validation succeeds.
+  # ==========================================
+  deploy-backend:
+    name: Deploy Backend to Render
+    runs-on: ubuntu-latest
+    needs: validate
+
+    steps:
+
+      # Trigger Render deployment.
+      - name: Trigger Render Deployment
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "$RENDER_DEPLOY_HOOK_URL" ]; then
+            echo "Render deploy hook is missing."
+            exit 1
+          fi
+
+          curl --fail --show-error --silent \
+            --request POST \
+            "$RENDER_DEPLOY_HOOK_URL"
+
+          echo "Render deployment triggered successfully."
