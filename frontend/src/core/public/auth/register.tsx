@@ -7,76 +7,16 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import LanguageTrans from "@/components/common/LanguageTrans";
 
 import { getTextByLanguage } from "@/i18n/i18n";
-import { registerSchema } from "@/service/auth/auth.schema";
-import { useSignup } from "@/service/auth/auth.service";
 
 import type { ISignupInterface } from "@/interface/auth.interface";
 import type { FieldConfig } from "@/components/form/types";
 import { DynamicForm } from "@/components/form/DynamicForm";
 
 const RegisterForm = () => {
-  const { t } = useTranslation();
-  const { mutate: signupMutation, isPending } = useSignup();
+ 
 
-  const form = useForm<ISignupInterface>({
-    resolver: yupResolver(registerSchema),
-    defaultValues: {
-      username: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    },
-  });
 
-  const fields: FieldConfig[] = useMemo(
-    () => [
-      {
-        name: "username",
-        label: t("auth:signup.username"),
-        type: "text",
-        placeholder: getTextByLanguage(
-          "Enter your username",
-          "आफ्नो प्रयोगकर्ता नाम प्रविष्ट गर्नुहोस्",
-        ),
-        colSpan: 3,
-      },
-      {
-        name: "email",
-        label: t("auth:signup.email"),
-        type: "text",
-        placeholder: getTextByLanguage(
-          "Enter your email",
-          "आफ्नो इमेल प्रविष्ट गर्नुहोस्",
-        ),
-        colSpan: 3,
-      },
-      {
-        name: "password",
-        label: t("auth:signup.password"),
-        type: "password",
-        placeholder: getTextByLanguage(
-          "Enter your password",
-          "आफ्नो पासवर्ड प्रविष्ट गर्नुहोस्",
-        ),
-        colSpan: 3,
-      },
-      {
-        name: "confirmPassword",
-        label: t("auth:signup.confirmPassword"),
-        type: "password",
-        placeholder: getTextByLanguage(
-          "Re-enter your password",
-          "आफ्नो पासवर्ड पुनः प्रविष्ट गर्नुहोस्",
-        ),
-        colSpan: 3,
-      },
-    ],
-    [t],
-  );
 
-  const handleSignup = (value: ISignupInterface) => {
-    signupMutation(value);
-  };
 
   return (
     <div className="fixed inset-0 z-50 grid lg:grid-cols-2 bg-background overflow-y-auto">
@@ -137,13 +77,6 @@ const RegisterForm = () => {
           </p>
 
           <div className="w-full">
-            <DynamicForm<ISignupInterface>
-              config={fields}
-              form={form}
-              onSubmit={handleSignup}
-              submitButtonText={getTextByLanguage("Sign Up", "साइन अप")}
-              loading={isPending}
-            />
           </div>
 
           <div className="flex justify-end text-sm mt-4">
