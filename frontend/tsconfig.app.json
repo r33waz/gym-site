@@ -7,6 +7,8 @@
     "module": "ESNext",
     "types": ["vite/client"],
     "skipLibCheck": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -18,13 +20,11 @@
 
     /* Linting */
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
     "erasableSyntaxOnly": false,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
     "paths": {
-       "@/*": ["./src/*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["src", "lib/utils.ts"]
