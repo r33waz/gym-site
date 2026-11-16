@@ -4,19 +4,9 @@
     "frontend": {
       "root": "frontend",
       "framework": "vite"
-    },
-    "server": {
-      "root": "server",
-      "framework": "nestjs"
     }
   },
   "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": {
-        "service": "server"
-      }
-    },
     {
       "source": "/(.*)",
       "destination": {
