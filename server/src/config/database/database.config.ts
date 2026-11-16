@@ -7,11 +7,11 @@ import * as dotenv from 'dotenv';
 /**
  * Load environment variables.
  *
- * Development:
- *   .env.development
+ * Development: .env.development
+ * Production:  .env.production
  *
- * Production:
- *   Vercel environment variables are loaded automatically.
+ * On Render, configure production variables in the
+ * Render Environment dashboard.
  */
 dotenv.config({
   path: resolve(process.cwd(), `.env.${process.env.NODE_ENV ?? 'development'}`),
@@ -25,9 +25,7 @@ const entitiesPath = join(__dirname, '..', '..', 'core', '**', 'entities', '*.en
 const migrationsPath = join(__dirname, '..', '..', 'migrations', '*.{ts,js}');
 
 /**
- * Extract PostgreSQL options from TypeORM DataSourceOptions.
- *
- * This avoids importing PostgresConnectionOptions directly.
+ * PostgreSQL options type.
  */
 type PostgresOptions = Extract<DataSourceOptions, { type: 'postgres' }>;
 
@@ -41,52 +39,51 @@ function getRequiredEnv(name: string): string {
     throw new Error(`Missing required environment variable: ${name}`);
   }
 
-  return value;
+  return value.trim();
 }
 
 /**
- * Database configuration.
- *
- * If DATABASE_URL exists:
- *   Connect to Supabase (production).
- *
- * Otherwise:
- *   Connect using local PostgreSQL credentials (development).
+ * Validate PostgreSQL port.
  */
-function getDatabaseOptions(): PostgresOptions {
-  const databaseUrl = process.env.DATABASE_URL?.trim();
-
-  if (databaseUrl) {
-    return {
-      type: 'postgres',
-      url: databaseUrl,
-
-      // Tune this based on your serverless workload.
-      extra: {
-        max: 1,
-      },
-    };
-  }
-
+function getDatabasePort(): number {
   const port = Number(getRequiredEnv('DB_PORT'));
 
-  if (!Number.isInteger(port) || port <= 0) {
-    throw new Error('DB_PORT must be a valid positive integer.');
+  if (!Number.isInteger(port) || port <= 0 || port > 65535) {
+    throw new Error('DB_PORT must be a valid port between 1 and 65535.');
   }
 
+  return port;
+}
+
+/**
+ * PostgreSQL configuration.
+ *
+ * All environments use individual database credentials.
+ */
+function getDatabaseOptions(): PostgresOptions {
   return {
     type: 'postgres',
 
     host: getRequiredEnv('DB_HOST'),
-    port,
+    port: getDatabasePort(),
 
     username: getRequiredEnv('DB_USERNAME'),
     password: getRequiredEnv('DB_PASSWORD'),
     database: getRequiredEnv('DB_NAME'),
 
     extra: {
-      max: 10,
+      max: Number(process.env.DB_POOL_MAX ?? 10),
+      idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 10000,
     },
+
+    // Enable SSL in production when required by your
+    // PostgreSQL hosting configuration.
+    ...(process.env.DB_SSL === 'true' && {
+      ssl: {
+        rejectUnauthorized: process.env.DB_SSL_REJECT_UNAUTHORIZED !== 'false',
+      },
+    }),
   };
 }
 
@@ -101,7 +98,8 @@ export const configService: TypeOrmModuleAsyncOptions = {
 
     console.log('Database configuration loaded:', {
       type: 'postgres',
-      connectionType: process.env.DATABASE_URL ? 'Supabase' : 'Local PostgreSQL',
+      host: database.host,
+      database: database.database,
       nodeEnv: config.get<string>('app.env'),
     });
 
@@ -113,10 +111,8 @@ export const configService: TypeOrmModuleAsyncOptions = {
 
       migrationsTableName: 'migrations',
 
-      // Automatically register entities from NestJS feature modules.
       autoLoadEntities: true,
 
-      // Use migrations instead of automatic schema synchronization.
       synchronize: false,
       migrationsRun: false,
 
