@@ -1,5 +1,3 @@
-import { registerAs } from '@nestjs/config';
-
 export default () => ({
   app: {
     env: process.env.NODE_ENV ?? 'development',
@@ -16,29 +14,26 @@ export default () => ({
     name: process.env.DB_NAME ?? '',
     logging: process.env.DB_LOGGING === 'true',
   },
-  
-  jwt: {
-    // Staff / ERP auth secrets
-    staffAccessSecret: process.env.JWT_ACCESS_SECRET ?? 'change-me-staff-secret',
-    staffAccessExpiresIn: process.env.JWT_ACCESS_EXPIRES_IN ?? '15m',
-    refreshExpiresDays: parseInt(process.env.JWT_REFRESH_EXPIRES_DAYS ?? '30', 10),
 
-    // Customer / Marketplace auth secrets (isolated)
-    customerAccessSecret: process.env.CUSTOMER_JWT_ACCESS_SECRET ?? 'change-me-customer-secret',
-    customerAccessExpiresIn: process.env.CUSTOMER_JWT_EXPIRES_IN ?? '15m',
+  jwt: {
+    accessSecret: process.env.JWT_ACCESS_SECRET,
+    accessExpiresIn: process.env.JWT_ACCESS_EXPIRES_IN ?? '15m',
+
+    refreshExpiresDays: parseInt(process.env.JWT_REFRESH_EXPIRES_DAYS ?? '30', 10),
   },
 
   cookies: {
-    domain: process.env.COOKIE_DOMAIN ?? 'localhost',
+    domain: process.env.COOKIE_DOMAIN || undefined,
+
     secure: process.env.COOKIE_SECURE === 'true' || process.env.NODE_ENV === 'production',
+
     sameSite: (process.env.COOKIE_SAME_SITE ?? 'lax') as 'lax' | 'strict' | 'none',
 
-    // Default: 15 minutes (900,000 ms)
-    accessTokenMaxAge: parseInt(process.env.ACCESS_TOKEN_MAX_AGE_MS ?? '900000', 10),
+    accessTokenMaxAge: parseInt(process.env.ACCESS_TOKEN_MAX_AGE_MS ?? '900000',10),
 
-    // Default: 30 days (2,592,000,000 ms)
-    refreshTokenMaxAge: parseInt(process.env.REFRESH_TOKEN_MAX_AGE_MS ?? '2592000000', 10),
+    refreshTokenMaxAge: parseInt(process.env.REFRESH_TOKEN_MAX_AGE_MS ?? '2592000000',10),
 
-    refreshPath: process.env.REFRESH_COOKIE_PATH ?? '/auth/refresh',
+    // Must cover both /auth/refresh and /auth/logout.
+    refreshPath: process.env.REFRESH_COOKIE_PATH ?? '/auth',
   },
 });
