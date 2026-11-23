@@ -8,6 +8,7 @@ import { RequestLoggerMiddleware } from './middleware/logger/logger.middleware';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthModule } from './module/auth/auth.module';
+import { UserModule } from './module/user/user.module';
 
 @Module({
   imports: [
@@ -40,6 +41,8 @@ import { AuthModule } from './module/auth/auth.module';
     }),
 
     AuthModule,
+
+    UserModule,
   ],
   providers: [
     {
