@@ -46,8 +46,6 @@ export class Auth extends BaseEntity {
   @Column({ type: 'timestamptz', nullable: true })
   passwordChangedAt: Date | null;
 
-  @Column({ name: 'user_id', type: 'uuid', unique: true })
-  userId: string;
 
   @OneToOne(() => User, (user) => user.auth, {
     onDelete: 'CASCADE',
