@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable ,InternalServerErrorException} from '@nestjs/common';
 import { CreateAuthtDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { DataSource, Repository } from 'typeorm';
@@ -63,24 +63,14 @@ export class AuthService {
         await manager.save(Auth, auth);
         return { message: 'Account created successfully' };
       });
-    } catch (error) {}
+    } catch (error) {
+      if (error.code === '23505') { // '23505' is the PostgreSQL code for unique_violation
+      throw new ConflictException('Email or Username already exists');
+    }
+    
+    // Otherwise, throw a proper internal server error so your NestJS global filters catch it
+    throw new InternalServerErrorException('Failed to create account. Changes rolled back.', error.message);
   }
-
-  // private async create
-
-  findAll() {
-    return `This action returns all auth`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
-
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
-  }
+    }
+  
 }
