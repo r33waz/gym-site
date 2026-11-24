@@ -72,5 +72,5 @@ export class AuthService {
     throw new InternalServerErrorException('Failed to create account. Changes rolled back.', error.message);
   }
     }
-  }
+  
 }
