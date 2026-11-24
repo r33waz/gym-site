@@ -22,10 +22,16 @@
  * PostgreSQL: auth.user_status
  */
 export enum UserStatus {
-  PENDING = 'PENDING',
   ACTIVE = 'ACTIVE',
   INACTIVE = 'INACTIVE',
   SUSPENDED = 'SUSPENDED',
+}
+
+export enum AuthStatus {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  SUSPENDED = 'SUSPENDED',
+  PENDING_VERIFICATION = 'PENDING_VERIFICATION',
 }
 
 // ============================================================================

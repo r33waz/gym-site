@@ -9,14 +9,14 @@ export interface IPaginationMeta {
 
 export interface IServiceResponse<T> {
   message: string;
-  data: T;
+  data?: T;
   meta?: IPaginationMeta;
 }
 
 export interface IApiResponse<T> {
   status: number;
   message: string;
-  data: T;
+  data?: T;
   meta?: IPaginationMeta;
 }
 
@@ -32,10 +32,8 @@ export class ResponseTransformInterceptor<T> implements NestInterceptor<
       map((result: IServiceResponse<T>) => ({
         status: response.statusCode,
         message: result.message,
-        data: result.data,
-        ...(result.meta && {
-          meta: result.meta,
-        }),
+        ...(result.data !== undefined && { data: result.data }),
+        ...(result.meta && { meta: result.meta }),
       })),
     );
   }

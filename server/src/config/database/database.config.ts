@@ -1,17 +1,37 @@
 import { ConfigService } from '@nestjs/config';
-import { TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
-import { join } from 'path';
-import { DataSource } from 'typeorm';
+import { TypeOrmModuleAsyncOptions, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { DataSource, DataSourceOptions } from 'typeorm';
+import { join, resolve } from 'path';
 import * as dotenv from 'dotenv';
 
+/**
+ * Load environment variables.
+ *
+ * Development: .env.development
+ * Production:  .env.production
+ *
+ * On Render, configure production variables in the
+ * Render Environment dashboard.
+ */
 dotenv.config({
-  path: `.env.${process.env.NODE_ENV ?? 'development'}`,
+  path: resolve(process.cwd(), `.env.${process.env.NODE_ENV ?? 'development'}`),
 });
 
-const entitiesPath = join(__dirname, '..', '..', 'core', '**', 'entities', '*.entity.{ts,js}');
+/**
+ * Entity and migration paths.
+ */
+const entitiesPath = join(__dirname, '..', '..', 'module', '**', 'entities', '*.entity.{ts,js}');
 
 const migrationsPath = join(__dirname, '..', '..', 'migrations', '*.{ts,js}');
 
+/**
+ * PostgreSQL options type.
+ */
+type PostgresOptions = Extract<DataSourceOptions, { type: 'postgres' }>;
+
+/**
+ * Read required environment variables.
+ */
 function getRequiredEnv(name: string): string {
   const value = process.env[name];
 
@@ -19,65 +39,104 @@ function getRequiredEnv(name: string): string {
     throw new Error(`Missing required environment variable: ${name}`);
   }
 
-  return value;
+  return value.trim();
 }
 
-function getDatabaseConfig(config: ConfigService) {
-  const password = config.get<string>('database.password');
+/**
+ * Validate PostgreSQL port.
+ */
+function getDatabasePort(): number {
+  const port = Number(getRequiredEnv('DB_PORT'));
 
-  if (typeof password !== 'string' || password.length === 0) {
-    throw new Error('Database password is missing. Check your environment configuration.');
+  if (!Number.isInteger(port) || port <= 0 || port > 65535) {
+    throw new Error('DB_PORT must be a valid port between 1 and 65535.');
   }
 
+  return port;
+}
+
+/**
+ * PostgreSQL configuration.
+ *
+ * All environments use individual database credentials.
+ */
+function getDatabaseOptions(): PostgresOptions {
   return {
-    host: config.getOrThrow<string>('database.host'),
-    port: config.getOrThrow<number>('database.port'),
-    username: config.getOrThrow<string>('database.username'),
-    password,
-    database: config.getOrThrow<string>('database.name'),
+    type: 'postgres',
+
+    host: getRequiredEnv('DB_HOST'),
+    port: getDatabasePort(),
+
+    username: getRequiredEnv('DB_USERNAME'),
+    password: getRequiredEnv('DB_PASSWORD'),
+    database: getRequiredEnv('DB_NAME'),
+
+    extra: {
+      max: Number(process.env.DB_POOL_MAX ?? 10),
+      idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 10000,
+    },
+
+    // Enable SSL in production when required by your
+    // PostgreSQL hosting configuration.
+    ...(process.env.DB_SSL === 'true' && {
+      ssl: {
+        rejectUnauthorized: process.env.DB_SSL_REJECT_UNAUTHORIZED !== 'false',
+      },
+    }),
   };
 }
 
+/**
+ * NestJS TypeORM configuration.
+ */
 export const configService: TypeOrmModuleAsyncOptions = {
   inject: [ConfigService],
 
-  useFactory: (config: ConfigService) => {
-    const database = getDatabaseConfig(config);
+  useFactory: (config: ConfigService): TypeOrmModuleOptions => {
+    const database = getDatabaseOptions();
 
     console.log('Database configuration loaded:', {
+      type: 'postgres',
       host: database.host,
-      port: database.port,
-      username: database.username,
       database: database.database,
-      passwordDefined: true,
-      passwordType: typeof database.password,
       nodeEnv: config.get<string>('app.env'),
     });
 
     return {
-      type: 'postgres',
       ...database,
+
       entities: [entitiesPath],
       migrations: [migrationsPath],
+
       migrationsTableName: 'migrations',
+
       autoLoadEntities: true,
+
       synchronize: false,
       migrationsRun: false,
+
       logging: config.get<boolean>('database.logging', false),
     };
   },
 };
 
-export default new DataSource({
-  type: 'postgres',
-  host: getRequiredEnv('DB_HOST'),
-  port: Number(getRequiredEnv('DB_PORT')),
-  username: getRequiredEnv('DB_USERNAME'),
-  password: getRequiredEnv('DB_PASSWORD'),
-  database: getRequiredEnv('DB_NAME'),
+/**
+ * TypeORM CLI DataSource.
+ *
+ * Used for migration commands.
+ */
+const dataSource = new DataSource({
+  ...getDatabaseOptions(),
+
   entities: [entitiesPath],
-  migrationsTableName: 'migrations',
   migrations: [migrationsPath],
+
+  migrationsTableName: 'migrations',
+
   synchronize: false,
+
   logging: process.env.NODE_ENV !== 'production',
 });
+
+export default dataSource;
