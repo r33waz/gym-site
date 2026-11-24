@@ -20,7 +20,7 @@ dotenv.config({
 /**
  * Entity and migration paths.
  */
-const entitiesPath = join(__dirname, '..', '..', 'core', '**', 'entities', '*.entity.{ts,js}');
+const entitiesPath = join(__dirname, '..', '..', 'module', '**', 'entities', '*.entity.{ts,js}');
 
 const migrationsPath = join(__dirname, '..', '..', 'migrations', '*.{ts,js}');
 
