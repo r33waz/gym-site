@@ -63,7 +63,15 @@ export class AuthService {
         await manager.save(Auth, auth);
         return { message: 'Account created successfully' };
       });
-    } catch (error) {}
+    } catch (error) {
+      if (error.code === '23505') { // '23505' is the PostgreSQL code for unique_violation
+      throw new ConflictException('Email or Username already exists');
+    }
+    
+    // Otherwise, throw a proper internal server error so your NestJS global filters catch it
+    throw new InternalServerErrorException('Failed to create account. Changes rolled back.', error.message);
+  }
+    }
   }
 
   // private async create
