@@ -22,6 +22,8 @@
     "migration:create": "typeorm-ts-node-commonjs migration:create ./src/migrations/manual-migration --data-source ./src/config/database/database.config.ts",
     "migration:run": "typeorm-ts-node-commonjs migration:run --data-source ./src/config/database/database.config.ts",
     "migration:revert": "typeorm-ts-node-commonjs migration:revert --data-source ./src/config/database/database.config.ts",
+    "migration:run:prod": "typeorm migration:run --data-source dist/config/database/database.config.js",
+    "migration:show:prod": "typeorm migration:show --data-source dist/config/database/database.config.js",
     "start:render": "pnpm migration:run:prod && pnpm start:prod"
   },
   "dependencies": {
