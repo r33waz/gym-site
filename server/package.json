@@ -21,7 +21,8 @@
     "migration:generate": "typeorm-ts-node-commonjs migration:generate ./src/migrations/auto-migration --data-source ./src/config/database/database.config.ts",
     "migration:create": "typeorm-ts-node-commonjs migration:create ./src/migrations/manual-migration --data-source ./src/config/database/database.config.ts",
     "migration:run": "typeorm-ts-node-commonjs migration:run --data-source ./src/config/database/database.config.ts",
-    "migration:revert": "typeorm-ts-node-commonjs migration:revert --data-source ./src/config/database/database.config.ts"
+    "migration:revert": "typeorm-ts-node-commonjs migration:revert --data-source ./src/config/database/database.config.ts",
+    "start:render": "pnpm migration:run:prod && pnpm start:prod"
   },
   "dependencies": {
     "@nestjs/class-transformer": "^0.4.0",
