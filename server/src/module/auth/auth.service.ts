@@ -5,7 +5,6 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { CreateAuthtDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
 import { DataSource, EntityManager, IsNull, Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -19,6 +18,7 @@ import { RefreshToken } from './entities/refresh-token.entity';
 import { LoginHistory } from './entities/login-history.entity';
 import { createHash, randomBytes } from 'crypto';
 import { StringValue } from 'ms';
+import { SwaggerAuth } from '../../shared/decorators/swagger.auth.decorator';
 
 @Injectable()
 export class AuthService {
@@ -207,42 +207,43 @@ export class AuthService {
   }
 
   async refreshToken(oldToken: string, userAgent?: string, ipAddress?: string) {
-    const tokenHased = this.hashToken(oldToken);
-    return this.dataSource.transaction(async (manager) => {
-      const refreshRepository = manager.getTreeRepository(RefreshToken);
-      const authRepository = manager.getRepository(Auth);
+    const tokenHash = this.hashToken(oldToken);
 
-      const token = await this.refreshTokenRepository
+    return this.dataSource.transaction(async (manager) => {
+      const refreshRepository = manager.getRepository(RefreshToken);
+
+      // Find and lock the existing refresh token.
+      const token = await refreshRepository
         .createQueryBuilder('token')
         .leftJoinAndSelect('token.userAuth', 'auth')
         .leftJoinAndSelect('auth.user', 'user')
-        .where('token.tokenHash =:tokenHash', { tokenHased })
-        .setLock('pessimistic_write')
+        .where('token.tokenHash = :tokenHash', { tokenHash })
+        .setLock('pessimistic_write', undefined, ['token'])
         .getOne();
 
+      // Validate refresh token.
       if (!token || token.revokedAt || token.expiresAt <= new Date()) {
         throw new UnauthorizedException('Invalid or expired refresh token');
       }
+
+      // Validate account.
       if (token.userAuth.status !== AuthStatus.ACTIVE) {
         throw new UnauthorizedException('Account is not active');
       }
-      // Revoke previous token.
+
+      // Revoke old refresh token.
       token.revokedAt = new Date();
 
       await refreshRepository.save(token);
 
-      // Generate a new pair inside the same transaction.
+      // Generate new access and refresh tokens.
       const tokens = await this.createTokens(token.userAuth, userAgent, ipAddress, manager);
 
-      token.userAuth.lastLoginAt = token.userAuth.lastLoginAt;
-      await authRepository.save(token.userAuth);
-
-      return {
-        tokens,
-      };
+      return { tokens };
     });
   }
 
+  @SwaggerAuth()
   async logout(refreshToken: string) {
     const tokenHash = this.hashToken(refreshToken);
 

@@ -9,13 +9,15 @@ export const apiInstance: AxiosInstance = axios.create({
   // Base URL for all API requests (comes from environment variables)
   baseURL: import.meta.env.VITE_API_BASE_URL,
 
+  timeout: 15000,
   // Ensures cookies (httpOnly/session) are sent with every request
   // Required for cookie-based authentication
   withCredentials: true,
 
   // Default headers applied to all requests
   headers: {
-    "Content-Type": "application/json", // Default request body format
+    Accept: "application/json",
+    "Content-Type": "application/json",
   },
 });
 
@@ -31,42 +33,52 @@ apiInstance.interceptors.request.use(
 
     // Attach language header to every outgoing request
     // Used by backend for localization (i18n)
-    config.headers["Accept-Language"] = lang;
+    config.headers.set("Accept-Language", lang);
 
     // Return modified config so request continues
     return config;
   },
 
-  (error: AxiosError) => {
-    // If request setup fails, reject the promise
-    return Promise.reject(error);
-  },
+  (error: AxiosError) => Promise.reject(error),
 );
 
 // ====================== RESPONSE INTERCEPTOR ======================
 
 apiInstance.interceptors.response.use(
   (response: AxiosResponse) => {
-    // If response is successful (status 2xx), just return it
     return response;
   },
 
   (error: AxiosError) => {
-    console.log("🚀 ~ error:", error); // Log the raw error for debugging
-    // Check if server responded with 403 Forbidden
-    if (error.response?.status === 401) {
-      // ⚠️ IMPORTANT:
-      // force browser navigation to login page
-      window.location.replace("/login"); // Hard redirect to login on forbidden response
+    const status = error.response?.status;
+
+    const responseData = error.response?.data as
+      | {
+          message?: string | string[];
+        }
+      | undefined;
+
+    // Extract backend error message
+    const backendMessage = responseData?.message;
+
+    if (Array.isArray(backendMessage)) {
+      error.message = backendMessage.join(", ");
+    } else if (backendMessage) {
+      error.message = backendMessage;
     }
 
-    // Extract backend error message if available, otherwise use Axios default message
-    const customError = (error.response?.data as any)?.message || error.message;
+    // Authentication failure
+    if (status === 401) {
+      // Do not redirect here yet.
+      // Refresh-token handling will be implemented here.
+    }
 
-    // 3. Create a new Error object or modify the existing one
-    // This ensures that 'err.message' in TanStack Query is actually your backend message.
-    error.message = customError; // Override Axios error message with backend message
+    // Authorization failure
+    if (status === 403) {
+      // User is authenticated but lacks permission.
+      // Let the UI handle the forbidden response.
+    }
 
-    return Promise.reject(error); // Propagate the modified error to the caller
+    return Promise.reject(error);
   },
 );
