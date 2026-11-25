@@ -7,9 +7,9 @@ export class CreateAuthtDto {
   firstName: string;
 
   @IsOptional()
-  @IsString()
+  @IsOptional()
   @MaxLength(100)
-  middleName: string;
+  middleName?: string;
 
   @IsString()
   @IsNotEmpty()

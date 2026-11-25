@@ -10,6 +10,7 @@ import {
   HttpStatus,
   Req,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthtDto } from './dto/create-auth.dto';
@@ -22,7 +23,11 @@ import {
   getRefreshCookieOptions,
   REFRESH_COOKIE,
 } from './utils/auth-cookie.config';
+import { Throttle } from '@nestjs/throttler';
+import { ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from './guard/jwt-auth.guard';
 
+@ApiTags("Auths")
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -30,16 +35,21 @@ export class AuthController {
     private readonly configService: ConfigService,
   ) {}
 
-  @Post("signup")
- async create(@Body() createAuthDto: CreateAuthtDto) {
+  @Post('signup')
+  async create(@Body() createAuthDto: CreateAuthtDto) {
     const result = await this.authService.createAccount(createAuthDto);
-     return {
-       message: result.message,
-     };
+    return {
+      message: result.message,
+    };
   }
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
+  @Throttle({
+    short: { limit: 5, ttl: 1000 },
+    mediun: { limit: 5, ttl: 10000 },
+    long: { limit: 100, ttl: 60000 },
+  })
   async login(
     @Body() dto: LoginDto,
     @Req() request: Request,
@@ -59,8 +69,24 @@ export class AuthController {
       getRefreshCookieOptions(this.configService),
     );
 
-     return {
-       message: result.message,
-     };
+    return {
+      message: result.message,
+    };
+  }
+
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  async logout(@Req() request: Request, @Res({ passthrough: true }) response: Response) {
+    const refreshToken = request?.cookies?.[REFRESH_COOKIE];
+    if (refreshToken) {
+      await this.authService.logout(refreshToken);
+    }
+
+    response.clearCookie(ACCESS_COOKIE, getAccessCookieOptions(this.configService));
+    response.clearCookie(REFRESH_COOKIE, getAccessCookieOptions(this.configService));
+
+    return {
+      message: 'Logout successful',
+    };
   }
 }
