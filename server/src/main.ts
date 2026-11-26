@@ -33,38 +33,43 @@ async function bootstrap() {
   );
 
   // swagger configuration
-  const swaggerConfig = new DocumentBuilder()
-    .setTitle('Gym-SaaS API')
-    .setDescription(
-      `
-      REST API documentation for the Gym Management SaaS platform.
+ const swaggerConfig = new DocumentBuilder()
+   .setTitle('Gym-SaaS API')
+   .setDescription(
+     `
+    REST API documentation for the Gym Management SaaS platform.
 
-      This API supports authentication, user management, gym management,
-      memberships, attendance, bookings, billing, and other gym operations.
-      `,
-    )
-    .setVersion('1.0.0')
-    .addServer('http://localhost:8000', 'Development')
-    .addServer('https://gym-site-backend-koik.onrender.com', 'Production')
-    .addCookieAuth(
-      'access_token',
-      {
-        type: 'apiKey',
-        in: 'cookie',
-        name: ACCESS_COOKIE,
-        description: 'JWT access token stored in an HTTP-only cookie',
-      },
-      ACCESS_COOKIE,
-    )
-    .build();
+    This API supports authentication, user management, gym management,
+    memberships, attendance, bookings, billing, and other gym operations.
+  `,
+   )
+   .setVersion('1.0.0')
 
-  const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
+   // API base URLs
+   .addServer('http://localhost:8000/', 'Development')
+   .addServer('https://gym-site-backend-koik.onrender.com/', 'Production')
 
-  SwaggerModule.setup('api/docs', app, swaggerDocument, {
-    swaggerOptions: {
-      withCredentials: true,
-    },
-  });
+   // HTTP-only cookie authentication
+   .addCookieAuth(
+     ACCESS_COOKIE,
+     {
+       type: 'apiKey',
+       in: 'cookie',
+       name: ACCESS_COOKIE,
+       description: 'JWT access token stored in an HTTP-only cookie',
+     },
+     ACCESS_COOKIE,
+   )
+   .build();
+
+ const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
+
+ SwaggerModule.setup('api/docs', app, swaggerDocument, {
+   swaggerOptions: {
+     withCredentials: true,
+     persistAuthorization: true,
+   },
+ });
 
   app.useGlobalFilters(new HttpExceptionFilter());
 
