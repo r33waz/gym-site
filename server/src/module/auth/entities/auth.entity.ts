@@ -3,7 +3,7 @@ import { BaseEntity } from '../../../shared/entity/baseEntity';
 import { AuthStatus } from '../../../constant/enum/common.enum';
 import { User } from '../../user/entities/user.entity';
 @Entity({ name: 'auth', schema: 'public' })
-@Index('IDX_users_name', ['username'])
+@Index('IDX_users_email', ['email'])
 export class Auth extends BaseEntity {
   @Column({
     type: 'varchar',
@@ -11,13 +11,6 @@ export class Auth extends BaseEntity {
     unique: true,
   })
   email: string;
-
-  @Column({
-    type: 'varchar',
-    length: 50,
-    unique: true,
-  })
-  username: string;
 
   @Column({
     type: 'varchar',
@@ -45,7 +38,6 @@ export class Auth extends BaseEntity {
 
   @Column({ type: 'timestamptz', nullable: true })
   passwordChangedAt: Date | null;
-
 
   @OneToOne(() => User, (user) => user.auth, {
     onDelete: 'CASCADE',

@@ -44,6 +44,7 @@ async function bootstrap() {
       `,
     )
     .setVersion('1.0.0')
+    .addServer('http://localhost:8000', 'Development')
     .addServer('https://gym-site-backend-koik.onrender.com', 'Production')
     .addCookieAuth(
       'access_token',

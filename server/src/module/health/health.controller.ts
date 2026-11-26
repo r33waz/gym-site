@@ -10,9 +10,4 @@ export class HealthController {
       timestamp: new Date().toISOString(),
     };
   }
-
-  @Head('health')
-  checkHealthHead() {
-    return;
-  }
 }
