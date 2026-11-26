@@ -114,14 +114,11 @@ export class AuthService {
     const email = createAuthDto.email.trim().toLowerCase();
     const username = createAuthDto.username.trim().toLowerCase();
     const existingEmail = await this.authRepository.findOne({ where: { email } });
-    const existingUserName = await this.authRepository.findOne({ where: { username } });
 
     if (existingEmail) {
       throw new ConflictException('Email already exists');
     }
-    if (existingUserName) {
-      throw new ConflictException('Username already exists');
-    }
+
 
     const hashedPassword = await generatePassword(createAuthDto?.password);
 
@@ -142,7 +139,6 @@ export class AuthService {
         const auth = authRepo.create({
           user: savedUser,
           email: createAuthDto.email.trim().toLowerCase(),
-          username: createAuthDto.username.trim().toLowerCase(),
           passwordHash: hashedPassword,
           status: AuthStatus.ACTIVE,
         });

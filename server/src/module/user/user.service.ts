@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
@@ -11,13 +11,35 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-
   findAll() {
     return `This action returns all user`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findById(userId: string) {
+    const user = await this.userRepository
+      .createQueryBuilder('user')
+      .leftJoin('user.auth', 'auth')
+      .select([
+        'user.id',
+        'user.firstName',
+        'user.middleName',
+        'user.lastName',
+        'user.phoneNumber',
+        'user.createdAt',
+      ])
+      .addSelect([
+        'auth.email',
+        'auth.username',
+        'auth.status',
+        'auth.isEmailVerified',
+        'auth.isPhoneVerified',
+      ])
+      .where('user.id=:userId', { userId })
+      .getOne();
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
