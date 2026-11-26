@@ -52,6 +52,7 @@ export class AuthController {
     @Res({ passthrough: true }) response: Response,
   ) {
     const result = await this.authService.login(dto, request.headers['user-agent'], request.ip);
+    console.log("🚀 ~ AuthController ~ login ~ result:", result)
 
     response.cookie(
       ACCESS_COOKIE,
